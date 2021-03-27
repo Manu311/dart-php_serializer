@@ -1,0 +1,108 @@
+import 'php_serializer.dart';
+
+class Deserializer {
+  static dynamic parse(String rawInput, List<PhpSerializationObjectInformation> knownClasses) {
+    final repr = _StringRepresentation(rawInput, knownClasses);
+    return _parse(repr);
+  }
+
+  static dynamic _parse(_StringRepresentation repr) {
+    final identifier = repr.read(1, skip: 1);
+
+    switch (identifier) {
+      case 's':
+        return _parseString(repr);
+      case 'i':
+        return _parseInt(repr);
+      case 'a':
+        return _parseArray(repr);
+      case 'O':
+        return _parseObject(repr);
+      default:
+        throw InvalidSerializedString(repr.readAll());
+    }
+  }
+
+  static String _parseString(_StringRepresentation repr) {
+    final lengthOfString = int.parse(repr.readUntil(skip: 2));
+    final returnValue = repr.read(lengthOfString, skip: 2);
+    return returnValue;
+  }
+
+  static int _parseInt(_StringRepresentation repr) {
+    final returnValue = repr.readUntil(pattern: r';', skip: 1);
+    return int.parse(returnValue);
+  }
+
+  static dynamic _parseArray(_StringRepresentation repr,
+      {bool allowSimplifiacation = true}) {
+    final arrayLength = int.parse(repr.readUntil(pattern: r':', skip: 2));
+    final possibleReturnValue = Map<dynamic, dynamic>();
+    bool canBeSimplified = allowSimplifiacation;
+
+    for (int i = 0; i != arrayLength; ++i) {
+      final key = _parse(repr);
+      if (canBeSimplified && (!(key is int) || key != i))
+        canBeSimplified = false;
+      final value = _parse(repr);
+      possibleReturnValue[key] = value;
+    }
+    repr.skip(); //}
+
+    if (canBeSimplified) {
+      return List<dynamic>.generate(
+          possibleReturnValue.length, (index) => possibleReturnValue[index]);
+    }
+
+    return possibleReturnValue;
+  }
+
+  static dynamic _parseObject(_StringRepresentation repr) {
+    //O:10:"DummyClass":0:{}
+    final lengthOfName = int.parse(repr.readUntil(pattern: r':', skip: 2));
+    final classIdentifier = repr.read(lengthOfName, skip: 2);
+    final parameterArray = Map<String, dynamic>.from(_parseArray(repr, allowSimplifiacation: false));
+    final objectInfo = repr.getObjectInformation(classIdentifier);
+    return objectInfo.objectGenerator(parameterArray);
+  }
+}
+
+class _StringRepresentation {
+  String _rawString;
+  int _offset = 0;
+  final List<PhpSerializationObjectInformation> _knownClasses;
+
+  _StringRepresentation(this._rawString, this._knownClasses);
+
+  void skip([int length = 1]) {
+    _offset += length;
+  }
+
+  String read(int length, {int skip = 0}) {
+    assert(!isDone);
+    if (length > remaining) length = remaining;
+    _offset += length;
+    final returnValue = _rawString.substring(_offset - length, _offset);
+    this.skip(skip);
+    return returnValue;
+  }
+
+  String readUntil({String pattern = ':', int skip = 0}) {
+    assert(!isDone);
+    final offset = _offset;
+    _offset = _rawString.indexOf(pattern, _offset);
+    final returnValue = _rawString.substring(offset, _offset);
+    this.skip(skip);
+    return returnValue;
+  }
+
+  String readAll() => _rawString.substring(_offset);
+
+  bool get isDone => _offset == _rawString.length;
+
+  int get remaining => _rawString.length - _offset;
+
+  PhpSerializationObjectInformation getObjectInformation(String identifier) {
+    return _knownClasses.firstWhere((element) => element.serializedClassName == identifier);
+  }
+}
