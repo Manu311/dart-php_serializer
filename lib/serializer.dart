@@ -11,8 +11,34 @@ String phpSerialize(dynamic serializeMe,
   return _Serializer.parse(serializeMe, knownClasses ?? []);
 }
 
+abstract class SerializationException implements Exception {
+  final String message;
+
+  SerializationException(this.message);
+
+  @override
+  String toString() => this.message;
+}
+
+class ObjectWithoutSerializationInformationFound
+    extends SerializationException {
+  ObjectWithoutSerializationInformationFound(Type objectType)
+      : super(
+      'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialiazion-information was provided!');
+}
+
+class CustomSerializationFailed extends SerializationException {
+  final dynamic innerException;
+
+  CustomSerializationFailed(Type objectType, this.innerException)
+      : super(
+      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to serialize an Object of Type ${objectType.toString()}\n'
+          'Inner ${innerException.toString()}');
+}
+
 class _Serializer {
-  static String parse(dynamic rawInput, List<PhpSerializationObjectInformation> objectInformation) {
+  static String parse(dynamic rawInput,
+      List<PhpSerializationObjectInformation> objectInformation) {
     switch (rawInput.runtimeType) {
       case String:
         return _parseString(rawInput);
@@ -48,7 +74,8 @@ class _Serializer {
     return 'd:${inputDouble};';
   }
 
-  static String _parseList(List<dynamic> inputList, List<PhpSerializationObjectInformation> objectInformation) {
+  static String _parseList(List<dynamic> inputList,
+      List<PhpSerializationObjectInformation> objectInformation) {
     final sb = StringBuffer('a:${inputList.length}:{');
     for (var i = 0; i != inputList.length; ++i) {
       sb.write('i:${i};');
@@ -60,26 +87,36 @@ class _Serializer {
   }
 
   static String _parseMap(Map<dynamic, dynamic> inputMap,
-  List<PhpSerializationObjectInformation> objectInformation,
+      List<PhpSerializationObjectInformation> objectInformation,
       {bool prependArrayIdentifierAndSize = true}) {
     final sb = StringBuffer();
-    if (prependArrayIdentifierAndSize)
-      sb.write('a:${inputMap.length}:');
+    if (prependArrayIdentifierAndSize) sb.write('a:${inputMap.length}:');
     sb.write('{');
 
     inputMap.forEach((key, value) {
-      sb.write('${parse(key, objectInformation)}${parse(value, objectInformation)}');
+      sb.write(
+          '${parse(key, objectInformation)}${parse(value, objectInformation)}');
     });
 
     sb.write('}');
     return sb.toString();
   }
 
-  static String _parseSerializableClass(Object inputClass, List<PhpSerializationObjectInformation> objectInformation) {
-    final matchingObject = objectInformation.firstWhere((element) => element.typeOf == inputClass.runtimeType);
+  static String _parseSerializableClass(Object inputClass,
+      List<PhpSerializationObjectInformation> objectInformation) {
+    final matchingObject = objectInformation.firstWhere(
+        (element) => element.typeOf == inputClass.runtimeType,
+        orElse: () => throw ObjectWithoutSerializationInformationFound(
+            inputClass.runtimeType));
     final className = matchingObject.serializedClassName;
-    final intermediateMap = matchingObject.dataExtractor(inputClass);
-    final serializer = _parseMap(intermediateMap, objectInformation, prependArrayIdentifierAndSize: false);
+    late final intermediateMap;
+    try {
+      intermediateMap = matchingObject.dataExtractor(inputClass);
+    } catch (e) {
+      throw CustomSerializationFailed(matchingObject.typeOf, e);
+    }
+    final serializer = _parseMap(intermediateMap, objectInformation,
+        prependArrayIdentifierAndSize: false);
     return 'O:${className.length}:"${className}":${intermediateMap.length}:${serializer}';
   }
 }

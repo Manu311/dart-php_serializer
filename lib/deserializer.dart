@@ -11,8 +11,39 @@ dynamic phpDeserialize(String serializedString,
   return _Deserializer.parse(serializedString, knownClasses ?? []);
 }
 
+abstract class DeserializationException implements Exception {
+  final String message;
+
+  DeserializationException(this.message);
+
+  @override
+  String toString() => this.message;
+}
+
+class ObjectWithoutDeserializationInformationFound
+    extends DeserializationException {
+  ObjectWithoutDeserializationInformationFound(String fqcn)
+      : super(
+      'An object with classname ${fqcn} couldn\'t be deserialized, since no deserialiazion-information was provided!');
+}
+
+class CustomDeserializationFailed extends DeserializationException {
+  final dynamic innerException;
+
+  CustomDeserializationFailed(Type objectType, this.innerException)
+      : super(
+      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to deserialize an Object of Type ${objectType.toString()}\n'
+          'Inner ${innerException.toString()}');
+}
+
+class InvalidSerializedString extends DeserializationException {
+  InvalidSerializedString(String serializedString)
+      : super('Invalid serialized string: ${serializedString}');
+}
+
 class _Deserializer {
-  static dynamic parse(String rawInput, List<PhpSerializationObjectInformation> knownClasses) {
+  static dynamic parse(
+      String rawInput, List<PhpSerializationObjectInformation> knownClasses) {
     final repr = _StringRepresentation(rawInput, knownClasses);
     return _parse(repr);
   }
@@ -76,12 +107,16 @@ class _Deserializer {
   }
 
   static dynamic _parseObject(_StringRepresentation repr) {
-    //O:10:"DummyClass":0:{}
     final lengthOfName = int.parse(repr.readUntil(pattern: r':', skip: 2));
     final classIdentifier = repr.read(lengthOfName, skip: 2);
-    final parameterArray = Map<String, dynamic>.from(_parseArray(repr, allowSimplifiacation: false));
+    final parameterArray = Map<String, dynamic>.from(
+        _parseArray(repr, allowSimplifiacation: false));
     final objectInfo = repr.getObjectInformation(classIdentifier);
-    return objectInfo.objectGenerator(parameterArray);
+    try {
+      return objectInfo.objectGenerator(parameterArray);
+    } catch(e) {
+      throw CustomDeserializationFailed(objectInfo.typeOf, e);
+    }
   }
 }
 
@@ -121,6 +156,9 @@ class _StringRepresentation {
   int get remaining => _rawString.length - _offset;
 
   PhpSerializationObjectInformation getObjectInformation(String identifier) {
-    return _knownClasses.firstWhere((element) => element.serializedClassName == identifier);
+    return _knownClasses.firstWhere(
+        (element) => element.serializedClassName == identifier,
+        orElse: () =>
+            throw ObjectWithoutDeserializationInformationFound(identifier));
   }
 }

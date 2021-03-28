@@ -4,10 +4,6 @@ library php_serializer;
 export 'serializer.dart' show phpSerialize;
 export 'deserializer.dart' show phpDeserialize;
 
-class InvalidSerializedString extends FormatException {
-  InvalidSerializedString(String serializedString) : super(serializedString);
-}
-
 /// Contains information about complex objects which can be (de-)serialized
 ///
 /// A [List] of these can be passed to [phpSerialize] and [phpDeserialize]
