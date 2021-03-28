@@ -26,7 +26,7 @@ class ObjectWithoutDeserializationInformationFound
     extends DeserializationException {
   ObjectWithoutDeserializationInformationFound(String fqcn)
       : super(
-      'An object with classname $fqcn couldn\'t be deserialized, since no deserialiazion-information was provided!');
+            'An object with classname $fqcn couldn\'t be deserialized, since no deserialiazion-information was provided!');
 }
 
 ///Deserialization of an object failed because the user-defined converter
@@ -36,8 +36,8 @@ class CustomDeserializationFailed extends DeserializationException {
 
   CustomDeserializationFailed(Type objectType, this.innerException)
       : super(
-      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to deserialize an Object of Type ${objectType.toString()}\n'
-          'Inner ${innerException.toString()}');
+            'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to deserialize an Object of Type ${objectType.toString()}\n'
+            'Inner ${innerException.toString()}');
 }
 
 ///Deserialization failed because the passed string was invalid
@@ -120,7 +120,7 @@ class _Deserializer {
     final objectInfo = repr.getObjectInformation(classIdentifier);
     try {
       return objectInfo.objectGenerator(parameterArray);
-    } catch(e) {
+    } catch (e) {
       throw CustomDeserializationFailed(objectInfo.typeOf, e);
     }
   }

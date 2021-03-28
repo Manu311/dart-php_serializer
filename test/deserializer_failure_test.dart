@@ -18,7 +18,7 @@ void main() {
               PhpSerializationObjectInformation<DummyClass>(
                   'DummyClass',
                   (Map<String, dynamic> map) => throw thrownInnerException,
-                  (Object instance) => <String,dynamic>{})
+                  (Object instance) => <String, dynamic>{})
             ]),
         throwsA((exception) =>
             (exception is CustomDeserializationFailed) &&

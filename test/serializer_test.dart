@@ -6,7 +6,8 @@ import 'testClasses.dart';
 void main() {
   test('Serialize strings', () {
     expect(phpSerialize(''), 's:0:"";');
-    expect(phpSerialize('This is a test String'), 's:21:"This is a test String";');
+    expect(
+        phpSerialize('This is a test String'), 's:21:"This is a test String";');
   });
   test('Serialize integers', () {
     expect(phpSerialize(42), 'i:42;');
@@ -18,7 +19,8 @@ void main() {
   });
   test('Serialize Lists', () {
     expect(phpSerialize([1, 42, -100]), 'a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}');
-    expect(phpSerialize([3, -5, 0, 9]), 'a:4:{i:0;i:3;i:1;i:-5;i:2;i:0;i:3;i:9;}');
+    expect(
+        phpSerialize([3, -5, 0, 9]), 'a:4:{i:0;i:3;i:1;i:-5;i:2;i:0;i:3;i:9;}');
     expect(phpSerialize([3, 'Php Serialized']),
         'a:2:{i:0;i:3;i:1;s:14:"Php Serialized";}');
   });
@@ -61,7 +63,7 @@ void main() {
           !serializedString.contains('s:10:"Parameter1";i:42;') ||
           !serializedString.contains('s:14:"otherParameter";s:5:"Value";') ||
           !serializedString
-                  .contains('s:10:"innerClass";O:10:"DummyClass":0:{}') ||
+              .contains('s:10:"innerClass";O:10:"DummyClass":0:{}') ||
           serializedString.length != 123) return false;
       return true;
     });

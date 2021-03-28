@@ -6,3 +6,7 @@
 ## 0.1.1
 
 * Fixed analyser findings
+
+## 0.1.2
+
+* Reformated files according to dart format

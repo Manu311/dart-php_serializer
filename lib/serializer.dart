@@ -26,7 +26,7 @@ class ObjectWithoutSerializationInformationFound
     extends SerializationException {
   ObjectWithoutSerializationInformationFound(Type objectType)
       : super(
-      'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialiazion-information was provided!');
+            'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialiazion-information was provided!');
 }
 
 ///Serialization of an object failed because the user-defined converter
@@ -36,8 +36,8 @@ class CustomSerializationFailed extends SerializationException {
 
   CustomSerializationFailed(Type objectType, this.innerException)
       : super(
-      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to serialize an Object of Type ${objectType.toString()}\n'
-          'Inner ${innerException.toString()}');
+            'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to serialize an Object of Type ${objectType.toString()}\n'
+            'Inner ${innerException.toString()}');
 }
 
 class _Serializer {
