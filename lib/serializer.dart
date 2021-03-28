@@ -20,6 +20,8 @@ abstract class SerializationException implements Exception {
   String toString() => this.message;
 }
 
+///Serialization of an object failed because there was no matching
+///[PhpSerializationObjectInformation] provided
 class ObjectWithoutSerializationInformationFound
     extends SerializationException {
   ObjectWithoutSerializationInformationFound(Type objectType)
@@ -27,6 +29,8 @@ class ObjectWithoutSerializationInformationFound
       'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialiazion-information was provided!');
 }
 
+///Serialization of an object failed because the user-defined converter
+///function threw an exception.
 class CustomSerializationFailed extends SerializationException {
   final dynamic innerException;
 

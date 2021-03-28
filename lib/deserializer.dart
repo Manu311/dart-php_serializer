@@ -20,6 +20,8 @@ abstract class DeserializationException implements Exception {
   String toString() => this.message;
 }
 
+///Deserialization of an object failed because there was no matching
+///[PhpSerializationObjectInformation] provided
 class ObjectWithoutDeserializationInformationFound
     extends DeserializationException {
   ObjectWithoutDeserializationInformationFound(String fqcn)
@@ -27,6 +29,8 @@ class ObjectWithoutDeserializationInformationFound
       'An object with classname ${fqcn} couldn\'t be deserialized, since no deserialiazion-information was provided!');
 }
 
+///Deserialization of an object failed because the user-defined converter
+///function threw an exception.
 class CustomDeserializationFailed extends DeserializationException {
   final dynamic innerException;
 
@@ -36,6 +40,7 @@ class CustomDeserializationFailed extends DeserializationException {
           'Inner ${innerException.toString()}');
 }
 
+///Deserialization failed because the passed string was invalid
 class InvalidSerializedString extends DeserializationException {
   InvalidSerializedString(String serializedString)
       : super('Invalid serialized string: ${serializedString}');

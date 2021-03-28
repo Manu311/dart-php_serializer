@@ -1,12 +1,10 @@
 name: php_serializer
 description: Serialize and deserialize Php-Serialized strings
 version: 0.1.0
-homepage:
+repository: https://github.com/Manu311/dart-php_serializer
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-
-dependencies:
 
 dev_dependencies:
   test:
