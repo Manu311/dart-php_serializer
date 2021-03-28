@@ -1,3 +1,6 @@
-## 0.0.1
+## 0.1.0
 
-* TODO: Describe initial release.
+* Initial Release
+* Features are all available
+* Error-handling is not streamlined yet
+
