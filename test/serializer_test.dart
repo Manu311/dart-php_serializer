@@ -12,6 +12,10 @@ void main() {
     expect(phpSerialize(42), 'i:42;');
     expect(phpSerialize(-42), 'i:-42;');
   });
+  test('Serialize floating point numbers', () {
+    expect(phpSerialize(53.06125), 'd:53.06125;');
+    expect(phpSerialize(15.000), 'd:15;');
+  });
   test('Serialize Lists', () {
     expect(phpSerialize([1, 42, -100]), 'a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}');
     expect(phpSerialize([3, -5, 0, 9]), 'a:4:{i:0;i:3;i:1;i:-5;i:2;i:0;i:3;i:9;}');

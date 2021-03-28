@@ -25,6 +25,8 @@ class _Deserializer {
         return _parseString(repr);
       case 'i':
         return _parseInt(repr);
+      case 'd':
+        return _parseDouble(repr);
       case 'a':
         return _parseArray(repr);
       case 'O':
@@ -43,6 +45,11 @@ class _Deserializer {
   static int _parseInt(_StringRepresentation repr) {
     final returnValue = repr.readUntil(pattern: r';', skip: 1);
     return int.parse(returnValue);
+  }
+
+  static double _parseDouble(_StringRepresentation repr) {
+    final returnValue = repr.readUntil(pattern: r';', skip: 1);
+    return double.parse(returnValue);
   }
 
   static dynamic _parseArray(_StringRepresentation repr,

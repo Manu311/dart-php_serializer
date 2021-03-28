@@ -18,6 +18,8 @@ class _Serializer {
         return _parseString(rawInput);
       case int:
         return _parseInt(rawInput);
+      case double:
+        return _parseDouble(rawInput);
       default:
     }
 
@@ -38,6 +40,12 @@ class _Serializer {
 
   static String _parseInt(int inputInt) {
     return 'i:${inputInt};';
+  }
+
+  static String _parseDouble(double inputDouble) {
+    if (inputDouble.floorToDouble() == inputDouble)
+      return 'd:${inputDouble.floor()};';
+    return 'd:${inputDouble};';
   }
 
   static String _parseList(List<dynamic> inputList, List<PhpSerializationObjectInformation> objectInformation) {

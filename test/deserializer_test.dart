@@ -12,6 +12,10 @@ void main() {
     expect(phpDeserialize('i:42;'), 42);
     expect(phpDeserialize('i:-42;'), -42);
   });
+  test('Serialize floating point numbers', () {
+    expect(phpDeserialize('d:53.06125;'), 53.06125);
+    expect(phpDeserialize('d:15;'), 15.0);
+  });
   test('Deserialize Lists', () {
     expect(phpDeserialize('a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}'), [1, 42, -100]);
     expect(
