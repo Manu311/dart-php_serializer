@@ -7,7 +7,7 @@ import 'php_serializer.dart';
 /// have to be provided via a [List] of [PhpSerializationObjectInformation]
 /// as the second argument.
 dynamic phpDeserialize(String serializedString,
-    [List<PhpSerializationObjectInformation>? knownClasses = null]) {
+    [List<PhpSerializationObjectInformation>? knownClasses]) {
   return _Deserializer.parse(serializedString, knownClasses ?? []);
 }
 
@@ -17,7 +17,7 @@ abstract class DeserializationException implements Exception {
   DeserializationException(this.message);
 
   @override
-  String toString() => this.message;
+  String toString() => message;
 }
 
 ///Deserialization of an object failed because there was no matching
@@ -26,7 +26,7 @@ class ObjectWithoutDeserializationInformationFound
     extends DeserializationException {
   ObjectWithoutDeserializationInformationFound(String fqcn)
       : super(
-      'An object with classname ${fqcn} couldn\'t be deserialized, since no deserialiazion-information was provided!');
+      'An object with classname $fqcn couldn\'t be deserialized, since no deserialiazion-information was provided!');
 }
 
 ///Deserialization of an object failed because the user-defined converter
@@ -43,7 +43,7 @@ class CustomDeserializationFailed extends DeserializationException {
 ///Deserialization failed because the passed string was invalid
 class InvalidSerializedString extends DeserializationException {
   InvalidSerializedString(String serializedString)
-      : super('Invalid serialized string: ${serializedString}');
+      : super('Invalid serialized string: $serializedString');
 }
 
 class _Deserializer {
@@ -91,13 +91,14 @@ class _Deserializer {
   static dynamic _parseArray(_StringRepresentation repr,
       {bool allowSimplifiacation = true}) {
     final arrayLength = int.parse(repr.readUntil(pattern: r':', skip: 2));
-    final possibleReturnValue = Map<dynamic, dynamic>();
-    bool canBeSimplified = allowSimplifiacation;
+    final possibleReturnValue = <dynamic, dynamic>{};
+    var canBeSimplified = allowSimplifiacation;
 
-    for (int i = 0; i != arrayLength; ++i) {
+    for (var i = 0; i != arrayLength; ++i) {
       final key = _parse(repr);
-      if (canBeSimplified && (!(key is int) || key != i))
+      if (canBeSimplified && (!(key is int) || key != i)) {
         canBeSimplified = false;
+      }
       final value = _parse(repr);
       possibleReturnValue[key] = value;
     }
@@ -126,7 +127,7 @@ class _Deserializer {
 }
 
 class _StringRepresentation {
-  String _rawString;
+  final String _rawString;
   int _offset = 0;
   final List<PhpSerializationObjectInformation> _knownClasses;
 

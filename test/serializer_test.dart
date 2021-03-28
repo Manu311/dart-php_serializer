@@ -32,7 +32,7 @@ void main() {
       PhpSerializationObjectInformation<DummyClass>(
           'DummyClass',
           (Map<String, dynamic> map) => DummyClass(),
-          (Object instance) => Map<String, dynamic>()),
+          (Object instance) => <String, dynamic>{}),
       PhpSerializationObjectInformation<ClassWithParameters>(
           'ParameterClass',
           (Map<String, dynamic> map) => ClassWithParameters(
@@ -58,12 +58,10 @@ void main() {
       //Example output string:
       //'O:14:"ParameterClass":3:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}}'
       if (serializedString.substring(0, 25) != 'O:14:"ParameterClass":3:{' ||
-          serializedString.indexOf('s:10:"Parameter1";i:42;') == -1 ||
-          serializedString.indexOf('s:14:"otherParameter";s:5:"Value";') ==
-              -1 ||
-          serializedString
-                  .indexOf('s:10:"innerClass";O:10:"DummyClass":0:{}') ==
-              -1 ||
+          !serializedString.contains('s:10:"Parameter1";i:42;') ||
+          !serializedString.contains('s:14:"otherParameter";s:5:"Value";') ||
+          !serializedString
+                  .contains('s:10:"innerClass";O:10:"DummyClass":0:{}') ||
           serializedString.length != 123) return false;
       return true;
     });

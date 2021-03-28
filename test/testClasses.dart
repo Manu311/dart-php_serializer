@@ -18,7 +18,7 @@ class ClassWithParameters {
   @override
   bool operator ==(Object other) =>
       (other is ClassWithParameters) &&
-      (other.Parameter1 == this.Parameter1) &&
-      (other.otherParameter == this.otherParameter) &&
-      (other.innerClass == this.innerClass);
+      (other.Parameter1 == Parameter1) &&
+      (other.otherParameter == otherParameter) &&
+      (other.innerClass == innerClass);
 }

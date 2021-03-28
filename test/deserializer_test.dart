@@ -35,7 +35,7 @@ void main() {
       PhpSerializationObjectInformation<DummyClass>(
           'DummyClass', (Map<String, dynamic> map) => DummyClass(),
           (
-          Object instance) => Map<String,dynamic>()
+          Object instance) => <String,dynamic>{}
           ),
       PhpSerializationObjectInformation<ClassWithParameters>(
           'ParameterClass', (Map<String, dynamic> map) =>

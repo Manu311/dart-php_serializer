@@ -7,7 +7,7 @@ import 'php_serializer.dart';
 /// additional information via a [List] of [PhpSerializationObjectInformation]
 /// as the second argument.
 String phpSerialize(dynamic serializeMe,
-    [List<PhpSerializationObjectInformation>? knownClasses = null]) {
+    [List<PhpSerializationObjectInformation>? knownClasses]) {
   return _Serializer.parse(serializeMe, knownClasses ?? []);
 }
 
@@ -17,7 +17,7 @@ abstract class SerializationException implements Exception {
   SerializationException(this.message);
 
   @override
-  String toString() => this.message;
+  String toString() => message;
 }
 
 ///Serialization of an object failed because there was no matching
@@ -65,24 +65,25 @@ class _Serializer {
   }
 
   static String _parseString(String inputString) {
-    return 's:${inputString.length}:"${inputString}";';
+    return 's:${inputString.length}:"$inputString";';
   }
 
   static String _parseInt(int inputInt) {
-    return 'i:${inputInt};';
+    return 'i:$inputInt;';
   }
 
   static String _parseDouble(double inputDouble) {
-    if (inputDouble.floorToDouble() == inputDouble)
+    if (inputDouble.floorToDouble() == inputDouble) {
       return 'd:${inputDouble.floor()};';
-    return 'd:${inputDouble};';
+    }
+    return 'd:$inputDouble;';
   }
 
   static String _parseList(List<dynamic> inputList,
       List<PhpSerializationObjectInformation> objectInformation) {
     final sb = StringBuffer('a:${inputList.length}:{');
     for (var i = 0; i != inputList.length; ++i) {
-      sb.write('i:${i};');
+      sb.write('i:$i;');
       sb.write(parse(inputList[i], objectInformation));
     }
 
@@ -121,6 +122,6 @@ class _Serializer {
     }
     final serializer = _parseMap(intermediateMap, objectInformation,
         prependArrayIdentifierAndSize: false);
-    return 'O:${className.length}:"${className}":${intermediateMap.length}:${serializer}';
+    return 'O:${className.length}:"$className":${intermediateMap.length}:$serializer';
   }
 }

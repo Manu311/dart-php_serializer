@@ -73,3 +73,6 @@ build/
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
+
+# Pubspec.lock is not required for a library
+pubspec.lock
