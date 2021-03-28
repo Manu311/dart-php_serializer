@@ -1,6 +1,17 @@
 import 'php_serializer.dart';
 
-class Serializer {
+/// Takes an object and converts it into a [String] which could be deserialized
+/// by Php via its function `deserialize()`.
+///
+/// Only fundamental Objects are recognized, every other object requires
+/// additional information via a [List] of [PhpSerializationObjectInformation]
+/// as the second argument.
+String phpSerialize(dynamic serializeMe,
+    [List<PhpSerializationObjectInformation>? knownClasses = null]) {
+  return _Serializer.parse(serializeMe, knownClasses ?? []);
+}
+
+class _Serializer {
   static String parse(dynamic rawInput, List<PhpSerializationObjectInformation> objectInformation) {
     switch (rawInput.runtimeType) {
       case String:

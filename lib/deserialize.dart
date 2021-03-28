@@ -1,6 +1,17 @@
 import 'php_serializer.dart';
 
-class Deserializer {
+/// Parses a [String] which could be provided by Php via its function
+/// `serialize()` and returns the resulting object.
+///
+/// If more complex objects should be deserialized, further details for those
+/// have to be provided via a [List] of [PhpSerializationObjectInformation]
+/// as the second argument.
+dynamic phpDeserialize(String serializedString,
+    [List<PhpSerializationObjectInformation>? knownClasses = null]) {
+  return _Deserializer.parse(serializedString, knownClasses ?? []);
+}
+
+class _Deserializer {
   static dynamic parse(String rawInput, List<PhpSerializationObjectInformation> knownClasses) {
     final repr = _StringRepresentation(rawInput, knownClasses);
     return _parse(repr);

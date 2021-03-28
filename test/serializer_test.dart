@@ -4,23 +4,22 @@ import 'package:php_serializer/php_serializer.dart';
 import 'testClasses.dart';
 
 void main() {
-  const serialize = PhpSerializer.serialize;
   test('Serialize strings', () {
-    expect(serialize(''), 's:0:"";');
-    expect(serialize('This is a test String'), 's:21:"This is a test String";');
+    expect(phpSerialize(''), 's:0:"";');
+    expect(phpSerialize('This is a test String'), 's:21:"This is a test String";');
   });
   test('Serialize integers', () {
-    expect(serialize(42), 'i:42;');
-    expect(serialize(-42), 'i:-42;');
+    expect(phpSerialize(42), 'i:42;');
+    expect(phpSerialize(-42), 'i:-42;');
   });
   test('Serialize Lists', () {
-    expect(serialize([1, 42, -100]), 'a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}');
-    expect(serialize([3, -5, 0, 9]), 'a:4:{i:0;i:3;i:1;i:-5;i:2;i:0;i:3;i:9;}');
-    expect(serialize([3, 'Php Serialized']),
+    expect(phpSerialize([1, 42, -100]), 'a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}');
+    expect(phpSerialize([3, -5, 0, 9]), 'a:4:{i:0;i:3;i:1;i:-5;i:2;i:0;i:3;i:9;}');
+    expect(phpSerialize([3, 'Php Serialized']),
         'a:2:{i:0;i:3;i:1;s:14:"Php Serialized";}');
   });
   test('Serialize Maps', () {
-    expect(serialize({'a': 42, 'Test me': 5, 5: 'Don\'t forget me'}),
+    expect(phpSerialize({'a': 42, 'Test me': 5, 5: 'Don\'t forget me'}),
         'a:3:{s:1:"a";i:42;s:7:"Test me";i:5;i:5;s:15:"Don\'t forget me";}');
   });
 
@@ -42,10 +41,10 @@ void main() {
                 'otherParameter': instance.otherParameter
               })
     ];
-    expect(serialize(DummyClass(), objectSerializationData),
+    expect(phpSerialize(DummyClass(), objectSerializationData),
         'O:10:"DummyClass":0:{}');
     expect(
-        serialize(
+        phpSerialize(
             ClassWithParameters(
                 Parameter1: 42,
                 otherParameter: 'Value',
