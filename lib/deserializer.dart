@@ -67,6 +67,10 @@ class _Deserializer {
         return _parseArray(repr);
       case 'O':
         return _parseObject(repr);
+      case 'N':
+        return null;
+      case 'b':
+        return (repr.read(2) == '1;');
       default:
         throw InvalidSerializedString(repr.readAll());
     }

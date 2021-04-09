@@ -68,4 +68,24 @@ void main() {
       return true;
     });
   });
+  test('Serialize closure/function', () {
+    //Php doesn't allow closures to be serialized, but since everything is an
+    //object in Dart, serialization of Closures is not a problem.
+    final serializeMe = () => true;
+    expect(
+        phpSerialize(serializeMe, [
+          PhpSerializationObjectInformation<bool Function()>(
+              'ClosureReturningBool',
+              (Map<String, dynamic> map) => throw UnimplementedError(),
+              (Object object) => {})
+        ]),
+        'O:20:"ClosureReturningBool":0:{}');
+  });
+  test('Serialize null', () {
+    expect(phpSerialize(null), 'N;');
+  });
+  test('Serialize bools', () {
+    expect(phpSerialize(false), 'b:0;');
+    expect(phpSerialize(true), 'b:1;');
+  });
 }

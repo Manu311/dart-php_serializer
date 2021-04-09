@@ -1,3 +1,7 @@
+## 0.2.0
+
+* Added boolean values
+* Added null values
 ## 0.1.2
 
 * Reformated files according to dart format

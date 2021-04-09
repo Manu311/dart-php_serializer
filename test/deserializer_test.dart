@@ -1,3 +1,4 @@
+import 'package:php_serializer/deserializer.dart';
 import 'package:test/test.dart';
 import 'package:php_serializer/php_serializer.dart';
 import 'testClasses.dart';
@@ -56,5 +57,12 @@ void main() {
             objectSerializationData),
         ClassWithParameters(
             Parameter1: 42, otherParameter: 'Value', innerClass: DummyClass()));
+  });
+  test('Deserialize null', () {
+    expect(phpDeserialize('N;'), null);
+  });
+  test('Serialize bools', () {
+    expect(phpDeserialize('b:0;'), false);
+    expect(phpDeserialize('b:1;'), true);
   });
 }

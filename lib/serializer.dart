@@ -50,6 +50,10 @@ class _Serializer {
         return _parseInt(rawInput);
       case double:
         return _parseDouble(rawInput);
+      case Null:
+        return 'N;';
+      case bool:
+        return (rawInput) ? 'b:1;' : 'b:0;';
       default:
     }
 
