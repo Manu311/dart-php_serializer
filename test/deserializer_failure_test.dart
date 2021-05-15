@@ -1,7 +1,6 @@
-import 'package:php_serializer/deserializer.dart';
-import 'package:php_serializer/php_serializer.dart';
 import 'package:test/test.dart';
 
+import 'package:php_serializer/php_serializer.dart';
 import 'testClasses.dart';
 
 void main() {

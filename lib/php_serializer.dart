@@ -1,8 +1,11 @@
 ///Converts Php-Serialized objects into Dart and vice versa
 library php_serializer;
 
-export 'serializer.dart' show phpSerialize;
-export 'deserializer.dart' show phpDeserialize;
+export 'src/serializer.dart';
+export 'src/deserializer.dart';
+
+export 'src/missing_information_handler/missing_serialization_information_handler.dart';
+export 'src/missing_information_handler/missing_deserialization_information_handler.dart';
 
 /// Contains information about complex objects which can be (de-)serialized
 ///

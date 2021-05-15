@@ -15,7 +15,7 @@ void main() {
   });
   test('Serialize floating point numbers', () {
     expect(phpSerialize(53.06125), 'd:53.06125;');
-    expect(phpSerialize(15.000), 'd:15;');
+    expect(phpSerialize(15.0100), 'd:15.01;');
   });
   test('Serialize Lists', () {
     expect(phpSerialize([1, 42, -100]), 'a:3:{i:0;i:1;i:1;i:42;i:2;i:-100;}');

@@ -1,4 +1,4 @@
-import 'php_serializer.dart';
+import '../php_serializer.dart';
 
 /// Parses a [String] which could be provided by Php via its function
 /// `serialize()` and returns the resulting object.
@@ -7,10 +7,27 @@ import 'php_serializer.dart';
 /// have to be provided via a [List] of [PhpSerializationObjectInformation]
 /// as the second argument.
 dynamic phpDeserialize(String serializedString,
-    [List<PhpSerializationObjectInformation>? knownClasses]) {
-  return _Deserializer.parse(serializedString, knownClasses ?? []);
+    [List<PhpSerializationObjectInformation>? knownClasses,
+    NoMatchingObjectDeserializationInformation?
+        fallbackObjectDeserialization]) {
+  final deserializer = _Deserializer(
+      knownClasses ?? [],
+      fallbackObjectDeserialization ??
+          ThrowExceptionOnMissingDeserializationInformation());
+  return deserializer.parse(serializedString);
 }
 
+/// Implement this interface to customize the action when there is not matching
+/// information for deserialization.
+/// {@category Fallback Behavior}
+abstract class NoMatchingObjectDeserializationInformation {
+  /// Return a [PhpSerializationObjectInformation] for the class identified by
+  /// [classIdentifier]
+  PhpSerializationObjectInformation handleDeserialization(
+      String classIdentifier);
+}
+
+/// Will be thrown in case [phpDeserialize] fails for some reason
 abstract class DeserializationException implements Exception {
   final String message;
 
@@ -47,13 +64,19 @@ class InvalidSerializedString extends DeserializationException {
 }
 
 class _Deserializer {
-  static dynamic parse(
-      String rawInput, List<PhpSerializationObjectInformation> knownClasses) {
-    final repr = _StringRepresentation(rawInput, knownClasses);
+  final List<PhpSerializationObjectInformation> knownClasses;
+  final NoMatchingObjectDeserializationInformation
+      fallbackObjectDeserialization;
+
+  _Deserializer(this.knownClasses, this.fallbackObjectDeserialization);
+
+  dynamic parse(String rawInput) {
+    final repr = _StringRepresentation(
+        rawInput, knownClasses, fallbackObjectDeserialization);
     return _parse(repr);
   }
 
-  static dynamic _parse(_StringRepresentation repr) {
+  dynamic _parse(_StringRepresentation repr) {
     final identifier = repr.read(1, skip: 1);
 
     switch (identifier) {
@@ -76,23 +99,23 @@ class _Deserializer {
     }
   }
 
-  static String _parseString(_StringRepresentation repr) {
+  String _parseString(_StringRepresentation repr) {
     final lengthOfString = int.parse(repr.readUntil(skip: 2));
     final returnValue = repr.read(lengthOfString, skip: 2);
     return returnValue;
   }
 
-  static int _parseInt(_StringRepresentation repr) {
+  int _parseInt(_StringRepresentation repr) {
     final returnValue = repr.readUntil(pattern: r';', skip: 1);
     return int.parse(returnValue);
   }
 
-  static double _parseDouble(_StringRepresentation repr) {
+  double _parseDouble(_StringRepresentation repr) {
     final returnValue = repr.readUntil(pattern: r';', skip: 1);
     return double.parse(returnValue);
   }
 
-  static dynamic _parseArray(_StringRepresentation repr,
+  dynamic _parseArray(_StringRepresentation repr,
       {bool allowSimplifiacation = true}) {
     final arrayLength = int.parse(repr.readUntil(pattern: r':', skip: 2));
     final possibleReturnValue = <dynamic, dynamic>{};
@@ -116,7 +139,7 @@ class _Deserializer {
     return possibleReturnValue;
   }
 
-  static dynamic _parseObject(_StringRepresentation repr) {
+  dynamic _parseObject(_StringRepresentation repr) {
     final lengthOfName = int.parse(repr.readUntil(pattern: r':', skip: 2));
     final classIdentifier = repr.read(lengthOfName, skip: 2);
     final parameterArray = Map<String, dynamic>.from(
@@ -134,8 +157,11 @@ class _StringRepresentation {
   final String _rawString;
   int _offset = 0;
   final List<PhpSerializationObjectInformation> _knownClasses;
+  final NoMatchingObjectDeserializationInformation
+      fallbackObjectDeserialization;
 
-  _StringRepresentation(this._rawString, this._knownClasses);
+  _StringRepresentation(
+      this._rawString, this._knownClasses, this.fallbackObjectDeserialization);
 
   void skip([int length = 1]) {
     _offset += length;
@@ -169,6 +195,6 @@ class _StringRepresentation {
     return _knownClasses.firstWhere(
         (element) => element.serializedClassName == identifier,
         orElse: () =>
-            throw ObjectWithoutDeserializationInformationFound(identifier));
+            fallbackObjectDeserialization.handleDeserialization(identifier));
   }
 }
