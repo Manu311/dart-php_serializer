@@ -8,13 +8,14 @@ void main() {
     expect(
         phpDeserialize(
             'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:11:"innerClass2";O:11:"DummyClass2":0:{}}',
-            [
+            knownClasses: [
               PhpSerializationObjectInformation<DummyClass>(
                   'DummyClass',
                   (Map<String, dynamic> map) => DummyClass(),
                   (Object instance) => <String, dynamic>{}),
             ],
-            GenerateMapOnMissingDeserializationInformation()),
+            fallbackObjectDeserialization:
+                GenerateMapOnMissingDeserializationInformation()),
         {
           'Parameter1': 42,
           'otherParameter': 'Value',
@@ -27,8 +28,8 @@ void main() {
     expect(
         phpDeserialize(
             'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:11:"innerClass2";O:11:"DummyClass2":0:{}}',
-            [],
-            GenerateDartClassCodeOnMissingDeserializationInformation()),
+            fallbackObjectDeserialization:
+                GenerateDartClassCodeOnMissingDeserializationInformation()),
         '''
 class ClassWithParameters {
   final int Parameter1;
@@ -65,8 +66,8 @@ class ClassWithParameters {
     expect(
         phpDeserialize(
             r'a:2:{i:0;O:3:"Foo":1:{s:3:"bar";O:3:"Bar":0:{}}i:1;O:3:"Bar":1:{s:3:"foo";O:3:"Foo":0:{}}}',
-            [],
-            GenerateDartClassCodeOnMissingDeserializationInformation()),
+            fallbackObjectDeserialization:
+                GenerateDartClassCodeOnMissingDeserializationInformation()),
         [
           '''class Foo {
   final Bar bar;

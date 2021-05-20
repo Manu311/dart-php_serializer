@@ -13,7 +13,7 @@ void main() {
       () {
     final thrownInnerException = Exception('Test me');
     expect(
-        () => phpSerialize(DummyClass(), [
+        () => phpSerialize(DummyClass(), knownClasses: [
               PhpSerializationObjectInformation<DummyClass>(
                   'DummyClass',
                   (Map<String, dynamic> map) => DummyClass(),

@@ -49,12 +49,14 @@ void main() {
                 'otherParameter': instance.otherParameter
               })
     ];
-    expect(phpDeserialize('O:10:"DummyClass":0:{}', objectSerializationData),
+    expect(
+        phpDeserialize('O:10:"DummyClass":0:{}',
+            knownClasses: objectSerializationData),
         DummyClass());
     expect(
         phpDeserialize(
             'O:14:"ParameterClass":3:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}}',
-            objectSerializationData),
+            knownClasses: objectSerializationData),
         ClassWithParameters(
             Parameter1: 42, otherParameter: 'Value', innerClass: DummyClass()));
   });

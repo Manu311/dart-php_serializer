@@ -7,9 +7,9 @@ import '../php_serializer.dart';
 /// have to be provided via a [List] of [PhpSerializationObjectInformation]
 /// as the second argument.
 dynamic phpDeserialize(String serializedString,
-    [List<PhpSerializationObjectInformation>? knownClasses,
+    {List<PhpSerializationObjectInformation>? knownClasses,
     NoMatchingObjectDeserializationInformation?
-        fallbackObjectDeserialization]) {
+        fallbackObjectDeserialization}) {
   final deserializer = _Deserializer(
       knownClasses ?? [],
       fallbackObjectDeserialization ??

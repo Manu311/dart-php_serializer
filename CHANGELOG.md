@@ -1,3 +1,8 @@
+## 1.0.0-pre.1
+
+* Changed interface of phpSerialize to use named properties instead of position dependant ones
+* Changed interface of phpDeserialize to use named properties instead of position dependant ones
+
 ## 0.3.0
 
 * Added support to implement custom handlers in case of missing serialization or deserialization information for objects

@@ -10,8 +10,8 @@ import '../php_serializer.dart';
 /// in case there is no matching [PhpSerializationObjectInformation] for
 /// classes.
 String phpSerialize(dynamic serializeMe,
-    [List<PhpSerializationObjectInformation>? knownClasses,
-    NoMatchingObjectSerializationInformation? fallbackObjectSerialization]) {
+    {List<PhpSerializationObjectInformation>? knownClasses,
+    NoMatchingObjectSerializationInformation? fallbackObjectSerialization}) {
   final serializer = _Serializer(
       knownClasses ?? [],
       fallbackObjectSerialization ??

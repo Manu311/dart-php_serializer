@@ -8,8 +8,9 @@ void main() {
     expect(() => phpDeserialize(serialized),
         throwsA(TypeMatcher<ObjectWithoutDeserializationInformationFound>()));
 
-    final envelope = phpDeserialize(serialized, symfonyExampleInformation)
-        as SymfonyEnvelope;
+    final envelope =
+        phpDeserialize(serialized, knownClasses: symfonyExampleInformation)
+            as SymfonyEnvelope;
     expect(envelope.stamps.first.runtimeType, SymfonyBusNameStamp);
     expect((envelope.stamps.first as SymfonyBusNameStamp).busName,
         'messenger.bus.default');

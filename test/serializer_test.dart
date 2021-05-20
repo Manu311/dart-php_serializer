@@ -47,7 +47,7 @@ void main() {
                 'otherParameter': instance.otherParameter
               })
     ];
-    expect(phpSerialize(DummyClass(), objectSerializationData),
+    expect(phpSerialize(DummyClass(), knownClasses: objectSerializationData),
         'O:10:"DummyClass":0:{}');
     expect(
         phpSerialize(
@@ -55,7 +55,7 @@ void main() {
                 Parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),
-            objectSerializationData), (String serializedString) {
+            knownClasses: objectSerializationData), (String serializedString) {
       //Order of parameters can vary, so the test has to be flexible about it
       //Example output string:
       //'O:14:"ParameterClass":3:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}}'
@@ -73,7 +73,7 @@ void main() {
     //object in Dart, serialization of Closures is not a problem.
     final serializeMe = () => true;
     expect(
-        phpSerialize(serializeMe, [
+        phpSerialize(serializeMe, knownClasses: [
           PhpSerializationObjectInformation<bool Function()>(
               'ClosureReturningBool',
               (Map<String, dynamic> map) => throw UnimplementedError(),
