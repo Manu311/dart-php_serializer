@@ -2,7 +2,7 @@ name: php_serializer
 description: |
   Serialize and deserialize Strings that the Php-Functions serialize created or unserialize
   can parse, so Dart code can communicate with Php in its native format
-version: 0.3.0
+version: 0.3.1
 repository: https://github.com/Manu311/dart-php_serializer
 
 environment:

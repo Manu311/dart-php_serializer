@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Removed UsePropertiesOnMissingSerializationInformation from basic-library-code which allows inclusion into flutter-projects once again.
+
 ## 0.3.0
 
 * Added support to implement custom handlers in case of missing serialization or deserialization information for objects
