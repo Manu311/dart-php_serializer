@@ -1,4 +1,5 @@
 @TestOn('dart-vm')
+import 'package:php_serializer/dart_vm_only/serialization_information_handler.dart';
 import 'package:test/test.dart';
 
 import 'package:php_serializer/php_serializer.dart';
