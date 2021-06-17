@@ -1,3 +1,7 @@
+## 1.0.0-pre.2
+
+* Removed UsePropertiesOnMissingSerializationInformation from basic-library-code which allows inclusion into flutter-projects once again.
+
 ## 1.0.0-pre.1
 
 * Changed interface of phpSerialize to use named properties instead of position dependant ones
