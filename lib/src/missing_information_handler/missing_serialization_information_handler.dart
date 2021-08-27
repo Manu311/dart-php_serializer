@@ -5,6 +5,8 @@ import '../../php_serializer.dart';
 /// {@category Fallback Behavior}
 class ThrowExceptionOnMissingSerializationInformation
     implements NoMatchingObjectSerializationInformation {
+  const ThrowExceptionOnMissingSerializationInformation();
+
   @override
   PhpSerializationObjectInformation handleSerialization(Type objectType) {
     throw ObjectWithoutSerializationInformationFound(objectType);

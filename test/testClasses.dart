@@ -1,5 +1,5 @@
 class DummyClass {
-  DummyClass();
+  const DummyClass();
 
   @override
   bool operator ==(Object other) => other is DummyClass;
@@ -18,7 +18,7 @@ class ClassWithParameters {
   int get parameterViaGetter => Parameter1;
   set parameterViaSetter(int newValue) {}
 
-  ClassWithParameters(
+  const ClassWithParameters(
       {required this.Parameter1,
       required this.otherParameter,
       required this.innerClass})

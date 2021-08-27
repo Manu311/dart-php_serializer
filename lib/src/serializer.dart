@@ -10,15 +10,14 @@ import '../php_serializer.dart';
 /// in case there is no matching [PhpSerializationObjectInformation] for
 /// classes.
 String phpSerialize(dynamic serializeMe,
-    {List<PhpSerializationObjectInformation>? knownClasses,
-    NoMatchingObjectSerializationInformation? fallbackObjectSerialization}) {
-  final serializer = _Serializer(
-      knownClasses ?? [],
-      fallbackObjectSerialization ??
-          ThrowExceptionOnMissingSerializationInformation());
-
-  return serializer.parse(serializeMe);
-}
+        {List<PhpSerializationObjectInformation>? knownClasses,
+        NoMatchingObjectSerializationInformation?
+            fallbackObjectSerialization}) =>
+    _Serializer(
+            knownClasses ?? [],
+            fallbackObjectSerialization ??
+                const ThrowExceptionOnMissingSerializationInformation())
+        .parse(serializeMe);
 
 /// Implement this interface to customize the action when there is not matching
 /// information for serialization.
@@ -32,7 +31,7 @@ abstract class NoMatchingObjectSerializationInformation {
 abstract class SerializationException implements Exception {
   final String message;
 
-  SerializationException(this.message);
+  const SerializationException(this.message);
 
   @override
   String toString() => message;
@@ -41,28 +40,35 @@ abstract class SerializationException implements Exception {
 ///Serialization of an object failed because there was no matching
 ///[PhpSerializationObjectInformation] provided
 class ObjectWithoutSerializationInformationFound
-    extends SerializationException {
-  ObjectWithoutSerializationInformationFound(Type objectType)
-      : super(
-            'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialization-information was provided!');
+    implements SerializationException {
+  final Type objectType;
+
+  @override
+  String get message =>
+      'An object of type ${objectType.toString()} couldn\'t be serialized, since no serialization-information was provided!';
+
+  const ObjectWithoutSerializationInformationFound(this.objectType);
 }
 
 ///Serialization of an object failed because the user-defined converter
 ///function threw an exception.
-class CustomSerializationFailed extends SerializationException {
+class CustomSerializationFailed implements SerializationException {
   final dynamic innerException;
+  final Type objectType;
 
-  CustomSerializationFailed(Type objectType, this.innerException)
-      : super(
-            'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to serialize an Object of Type ${objectType.toString()}\n'
-            'Inner ${innerException.toString()}');
+  @override
+  String get message =>
+      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to serialize an Object of Type ${objectType.toString()}\n'
+      'Inner ${innerException.toString()}';
+
+  const CustomSerializationFailed(this.objectType, this.innerException);
 }
 
 class _Serializer {
   final List<PhpSerializationObjectInformation> _objectInformation;
   final NoMatchingObjectSerializationInformation _fallbackObjectSerialization;
 
-  _Serializer(this._objectInformation, this._fallbackObjectSerialization);
+  const _Serializer(this._objectInformation, this._fallbackObjectSerialization);
 
   String parse(dynamic rawInput) {
     switch (rawInput.runtimeType) {

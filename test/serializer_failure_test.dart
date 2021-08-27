@@ -5,18 +5,20 @@ import 'testClasses.dart';
 
 void main() {
   test('Fail to serialize unknown object', () {
-    expect(() => phpSerialize(DummyClass()),
-        throwsA(TypeMatcher<ObjectWithoutSerializationInformationFound>()));
+    expect(
+        () => phpSerialize(const DummyClass()),
+        throwsA(
+            const TypeMatcher<ObjectWithoutSerializationInformationFound>()));
   });
 
   test('Fail to serialize object with error-throwing serialization-function',
       () {
     final thrownInnerException = Exception('Test me');
     expect(
-        () => phpSerialize(DummyClass(), knownClasses: [
+        () => phpSerialize(const DummyClass(), knownClasses: [
               PhpSerializationObjectInformation<DummyClass>(
                   'DummyClass',
-                  (Map<String, dynamic> map) => DummyClass(),
+                  (Map<String, dynamic> map) => const DummyClass(),
                   (Object instance) => throw thrownInnerException)
             ]),
         throwsA((exception) =>

@@ -5,8 +5,10 @@ void main() {
   test('Actual example from Symfony', () {
     const serialized =
         'O:36:"Symfony\\Component\\Messenger\\Envelope":2:{s:44:"\0Symfony\\Component\\Messenger\\Envelope\0stamps";a:1:{s:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp";a:1:{i:0;O:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp":1:{s:55:"\0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp\0busName";s:21:"messenger.bus.default";}}}s:45:"\0Symfony\\Component\\Messenger\\Envelope\0message";O:42:"App\\Queue\\UserAccount\\CreateUserAccountJob":2:{s:56:"\0App\\Queue\\UserAccount\\CreateUserAccountJob\0emailAddress";s:28:"DislikeLeash@BoatComics.test";s:54:"\0App\\Queue\\UserAccount\\CreateUserAccountJob\0successJob";O:41:"App\\Queue\\Candidate\\ConnectUserAccountJob":2:{s:58:"\0App\\Queue\\Candidate\\ConnectUserAccountJob\0userAccountUuid";N;s:56:"\0App\\Queue\\Candidate\\ConnectUserAccountJob\0candidateUuid";O:28:"Symfony\\Component\\Uid\\UuidV4":1:{s:6:"\0*\0uid";s:36:"eecdf048-75d9-4f26-bb37-e6d168a41006";}}}}';
-    expect(() => phpDeserialize(serialized),
-        throwsA(TypeMatcher<ObjectWithoutDeserializationInformationFound>()));
+    expect(
+        () => phpDeserialize(serialized),
+        throwsA(
+            const TypeMatcher<ObjectWithoutDeserializationInformationFound>()));
 
     final envelope =
         phpDeserialize(serialized, knownClasses: symfonyExampleInformation)
@@ -24,38 +26,38 @@ void main() {
 }
 
 class SymfonyEnvelope {
-  List<StampInterface> stamps;
-  dynamic message;
+  final List<StampInterface> stamps;
+  final dynamic message;
 
-  SymfonyEnvelope(this.message, this.stamps);
+  const SymfonyEnvelope(this.message, this.stamps);
 }
 
 class StampInterface {}
 
 class SymfonyBusNameStamp implements StampInterface {
-  String busName;
+  final String busName;
 
-  SymfonyBusNameStamp(this.busName);
+  const SymfonyBusNameStamp(this.busName);
 }
 
 class CreateUserAccount {
-  String emailAddress;
-  ConnectUserAccountJob? successJob;
+  final String emailAddress;
+  final ConnectUserAccountJob? successJob;
 
-  CreateUserAccount(this.emailAddress, [this.successJob]);
+  const CreateUserAccount(this.emailAddress, [this.successJob]);
 }
 
 class ConnectUserAccountJob {
-  UuidV4? candidateUuid;
-  UuidV4? userAccountUuid;
+  final UuidV4? candidateUuid;
+  final UuidV4? userAccountUuid;
 
-  ConnectUserAccountJob(this.candidateUuid, this.userAccountUuid);
+  const ConnectUserAccountJob(this.candidateUuid, this.userAccountUuid);
 }
 
 class UuidV4 {
-  String uid;
+  final String uid;
 
-  UuidV4(this.uid);
+  const UuidV4(this.uid);
 }
 
 final List<PhpSerializationObjectInformation> symfonyExampleInformation = [

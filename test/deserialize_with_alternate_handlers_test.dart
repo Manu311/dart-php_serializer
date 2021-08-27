@@ -11,15 +11,15 @@ void main() {
             knownClasses: [
               PhpSerializationObjectInformation<DummyClass>(
                   'DummyClass',
-                  (Map<String, dynamic> map) => DummyClass(),
+                  (Map<String, dynamic> map) => const DummyClass(),
                   (Object instance) => <String, dynamic>{}),
             ],
             fallbackObjectDeserialization:
-                GenerateMapOnMissingDeserializationInformation()),
+                const GenerateMapOnMissingDeserializationInformation()),
         {
           'Parameter1': 42,
           'otherParameter': 'Value',
-          'innerClass': DummyClass(),
+          'innerClass': const DummyClass(),
           'innerClass2': {}
         });
   });
@@ -29,7 +29,7 @@ void main() {
         phpDeserialize(
             'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:11:"innerClass2";O:11:"DummyClass2":0:{}}',
             fallbackObjectDeserialization:
-                GenerateDartClassCodeOnMissingDeserializationInformation()),
+                const GenerateDartClassCodeOnMissingDeserializationInformation()),
         '''
 class ClassWithParameters {
   final int Parameter1;
@@ -67,7 +67,7 @@ class ClassWithParameters {
         phpDeserialize(
             r'a:2:{i:0;O:3:"Foo":1:{s:3:"bar";O:3:"Bar":0:{}}i:1;O:3:"Bar":1:{s:3:"foo";O:3:"Foo":0:{}}}',
             fallbackObjectDeserialization:
-                GenerateDartClassCodeOnMissingDeserializationInformation()),
+                const GenerateDartClassCodeOnMissingDeserializationInformation()),
         [
           '''class Foo {
   final Bar bar;

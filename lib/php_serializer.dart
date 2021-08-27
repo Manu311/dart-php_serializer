@@ -27,6 +27,6 @@ class PhpSerializationObjectInformation<T extends Object> {
 
   Type get typeOf => T;
 
-  PhpSerializationObjectInformation(
+  const PhpSerializationObjectInformation(
       this.serializedClassName, this.objectGenerator, this.dataExtractor);
 }

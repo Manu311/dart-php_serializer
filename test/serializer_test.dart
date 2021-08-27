@@ -33,7 +33,7 @@ void main() {
     final objectSerializationData = [
       PhpSerializationObjectInformation<DummyClass>(
           'DummyClass',
-          (Map<String, dynamic> map) => DummyClass(),
+          (Map<String, dynamic> map) => const DummyClass(),
           (Object instance) => <String, dynamic>{}),
       PhpSerializationObjectInformation<ClassWithParameters>(
           'ParameterClass',
@@ -47,11 +47,12 @@ void main() {
                 'otherParameter': instance.otherParameter
               })
     ];
-    expect(phpSerialize(DummyClass(), knownClasses: objectSerializationData),
+    expect(
+        phpSerialize(const DummyClass(), knownClasses: objectSerializationData),
         'O:10:"DummyClass":0:{}');
     expect(
         phpSerialize(
-            ClassWithParameters(
+            const ClassWithParameters(
                 Parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),

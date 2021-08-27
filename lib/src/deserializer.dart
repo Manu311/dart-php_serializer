@@ -7,15 +7,14 @@ import '../php_serializer.dart';
 /// have to be provided via a [List] of [PhpSerializationObjectInformation]
 /// as the second argument.
 dynamic phpDeserialize(String serializedString,
-    {List<PhpSerializationObjectInformation>? knownClasses,
-    NoMatchingObjectDeserializationInformation?
-        fallbackObjectDeserialization}) {
-  final deserializer = _Deserializer(
-      knownClasses ?? [],
-      fallbackObjectDeserialization ??
-          ThrowExceptionOnMissingDeserializationInformation());
-  return deserializer.parse(serializedString);
-}
+        {List<PhpSerializationObjectInformation>? knownClasses,
+        NoMatchingObjectDeserializationInformation?
+            fallbackObjectDeserialization}) =>
+    _Deserializer(
+            knownClasses ?? [],
+            fallbackObjectDeserialization ??
+                const ThrowExceptionOnMissingDeserializationInformation())
+        .parse(serializedString);
 
 /// Implement this interface to customize the action when there is not matching
 /// information for deserialization.
@@ -31,7 +30,7 @@ abstract class NoMatchingObjectDeserializationInformation {
 abstract class DeserializationException implements Exception {
   final String message;
 
-  DeserializationException(this.message);
+  const DeserializationException(this.message);
 
   @override
   String toString() => message;
@@ -41,25 +40,28 @@ abstract class DeserializationException implements Exception {
 ///[PhpSerializationObjectInformation] provided
 class ObjectWithoutDeserializationInformationFound
     extends DeserializationException {
-  ObjectWithoutDeserializationInformationFound(String fqcn)
+  const ObjectWithoutDeserializationInformationFound(String fqcn)
       : super(
             'An object with classname $fqcn couldn\'t be deserialized, since no deserialiazion-information was provided!');
 }
 
 ///Deserialization of an object failed because the user-defined converter
 ///function threw an exception.
-class CustomDeserializationFailed extends DeserializationException {
+class CustomDeserializationFailed implements DeserializationException {
   final dynamic innerException;
+  final Type objectType;
 
-  CustomDeserializationFailed(Type objectType, this.innerException)
-      : super(
-            'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to deserialize an Object of Type ${objectType.toString()}\n'
-            'Inner ${innerException.toString()}');
+  @override
+  String get message =>
+      'An exception of type ${innerException.runtimeType.toString()} was thrown when trying to deserialize an Object of Type ${objectType.toString()}\n'
+      'Inner ${innerException.toString()}';
+
+  const CustomDeserializationFailed(this.objectType, this.innerException);
 }
 
 ///Deserialization failed because the passed string was invalid
 class InvalidSerializedString extends DeserializationException {
-  InvalidSerializedString(String serializedString)
+  const InvalidSerializedString(String serializedString)
       : super('Invalid serialized string: $serializedString');
 }
 
@@ -68,7 +70,7 @@ class _Deserializer {
   final NoMatchingObjectDeserializationInformation
       fallbackObjectDeserialization;
 
-  _Deserializer(this.knownClasses, this.fallbackObjectDeserialization);
+  const _Deserializer(this.knownClasses, this.fallbackObjectDeserialization);
 
   dynamic parse(String rawInput) {
     final repr = _StringRepresentation(

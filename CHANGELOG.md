@@ -1,3 +1,7 @@
+## 1.0.0-pre.3
+
+* Added const constructors to most classes
+
 ## 1.0.0-pre.2
 
 * Removed UsePropertiesOnMissingSerializationInformation from basic-library-code which allows inclusion into flutter-projects once again.

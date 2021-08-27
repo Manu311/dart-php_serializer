@@ -5,8 +5,10 @@ import 'testClasses.dart';
 
 void main() {
   test('Fail to deserialize unknown object', () {
-    expect(() => phpDeserialize('O:10:"DummyClass":0:{}'),
-        throwsA(TypeMatcher<ObjectWithoutDeserializationInformationFound>()));
+    expect(
+        () => phpDeserialize('O:10:"DummyClass":0:{}'),
+        throwsA(
+            const TypeMatcher<ObjectWithoutDeserializationInformationFound>()));
   });
 
   test('Fail to serialize object with error-throwing serialization-function',

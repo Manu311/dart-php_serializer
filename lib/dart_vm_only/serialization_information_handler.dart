@@ -17,7 +17,7 @@ class UsePropertiesOnMissingSerializationInformation
   final bool inspectPrivate;
   final bool inspectGetters;
 
-  UsePropertiesOnMissingSerializationInformation({
+  const UsePropertiesOnMissingSerializationInformation({
     this.inspectPrivate = false,
     this.inspectGetters = false,
   });
@@ -41,7 +41,7 @@ class _UsePropertiesOfClass implements PhpSerializationObjectInformation {
   final bool inspectPrivate;
   final bool inspectGetters;
 
-  _UsePropertiesOfClass(this._type,
+  const _UsePropertiesOfClass(this._type,
       {this.inspectPrivate = false, this.inspectGetters = false});
 
   @override

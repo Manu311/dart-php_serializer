@@ -9,24 +9,24 @@ void main() {
   test('Serialize class with automatic property mapping', () {
     expect(
         phpSerialize(
-            ClassWithParameters(
+            const ClassWithParameters(
                 Parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),
             fallbackObjectSerialization:
-                UsePropertiesOnMissingSerializationInformation()),
+                const UsePropertiesOnMissingSerializationInformation()),
         'O:19:"ClassWithParameters":3:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}}');
   });
   test('Serialize class with automatic property mapping - including getters',
       () {
     expect(
         phpSerialize(
-            ClassWithParameters(
+            const ClassWithParameters(
                 Parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),
             fallbackObjectSerialization:
-                UsePropertiesOnMissingSerializationInformation(
+                const UsePropertiesOnMissingSerializationInformation(
                     inspectGetters: true)),
         'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:18:"parameterViaGetter";i:42;}');
   });
@@ -35,12 +35,12 @@ void main() {
       () {
     expect(
         phpSerialize(
-            ClassWithParameters(
+            const ClassWithParameters(
                 Parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),
             fallbackObjectSerialization:
-                UsePropertiesOnMissingSerializationInformation(
+                const UsePropertiesOnMissingSerializationInformation(
                     inspectPrivate: true)),
         'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:16:"_hiddenDuplicate";s:5:"Value";}');
   });

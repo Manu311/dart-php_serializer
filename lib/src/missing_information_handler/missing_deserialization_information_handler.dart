@@ -6,6 +6,8 @@ import '../../php_serializer.dart';
 /// {@category Fallback Behavior}
 class ThrowExceptionOnMissingDeserializationInformation
     implements NoMatchingObjectDeserializationInformation {
+  const ThrowExceptionOnMissingDeserializationInformation();
+
   @override
   PhpSerializationObjectInformation<Object> handleDeserialization(
       String classIdentifier) {
@@ -18,14 +20,17 @@ class ThrowExceptionOnMissingDeserializationInformation
 /// {@category Fallback Behavior}
 class GenerateMapOnMissingDeserializationInformation
     implements NoMatchingObjectDeserializationInformation {
+  const GenerateMapOnMissingDeserializationInformation();
+
   @override
   PhpSerializationObjectInformation<Object> handleDeserialization(
-      String classIdentifier) {
-    return _GenerateMap();
-  }
+          String classIdentifier) =>
+      const _GenerateMap();
 }
 
 class _GenerateMap implements PhpSerializationObjectInformation {
+  const _GenerateMap();
+
   @override
   Map<String, dynamic> Function(Object instance) get dataExtractor =>
       throw UnimplementedError();
@@ -50,6 +55,8 @@ class _GenerateMap implements PhpSerializationObjectInformation {
 /// {@category Fallback Behavior}
 class GenerateDartClassCodeOnMissingDeserializationInformation
     implements NoMatchingObjectDeserializationInformation {
+  const GenerateDartClassCodeOnMissingDeserializationInformation();
+
   @override
   PhpSerializationObjectInformation<Object> handleDeserialization(
       String classIdentifier) {
@@ -60,7 +67,7 @@ class GenerateDartClassCodeOnMissingDeserializationInformation
 class _GenerateDartClassCode implements PhpSerializationObjectInformation {
   final String _classIdentifier;
 
-  _GenerateDartClassCode(this._classIdentifier);
+  const _GenerateDartClassCode(this._classIdentifier);
 
   @override
   Map<String, dynamic> Function(Object instance) get dataExtractor =>
