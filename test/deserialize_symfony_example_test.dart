@@ -63,7 +63,7 @@ class UuidV4 {
 final List<PhpSerializationObjectInformation> symfonyExampleInformation = [
   PhpSerializationObjectInformation(
     r'Symfony\Component\Messenger\Envelope',
-    (Map<String, dynamic> map) {
+    objectGenerator: (Map<String, dynamic> map) {
       final stamps = List<StampInterface>.from(
           map['\0Symfony\\Component\\Messenger\\Envelope\0stamps']
               ['Symfony\\Component\\Messenger\\Stamp\\BusNameStamp'],
@@ -72,36 +72,31 @@ final List<PhpSerializationObjectInformation> symfonyExampleInformation = [
       return SymfonyEnvelope(
           map['\0Symfony\\Component\\Messenger\\Envelope\0message'], stamps);
     },
-    (Object instance) => throw UnimplementedError(),
   ),
   PhpSerializationObjectInformation(
     r'Symfony\Component\Messenger\Stamp\BusNameStamp',
-    (Map<String, dynamic> map) => SymfonyBusNameStamp(
+    objectGenerator: (Map<String, dynamic> map) => SymfonyBusNameStamp(
       map['\0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp\0busName'],
     ),
-    (Object instance) => throw UnimplementedError(),
   ),
   PhpSerializationObjectInformation(
     r'App\Queue\UserAccount\CreateUserAccountJob',
-    (Map<String, dynamic> map) => CreateUserAccount(
+    objectGenerator: (Map<String, dynamic> map) => CreateUserAccount(
       map['\0App\\Queue\\UserAccount\\CreateUserAccountJob\0emailAddress'],
       map['\0App\\Queue\\UserAccount\\CreateUserAccountJob\0successJob'],
     ),
-    (Object instance) => throw UnimplementedError(),
   ),
   PhpSerializationObjectInformation(
     r'App\Queue\Candidate\ConnectUserAccountJob',
-    (Map<String, dynamic> map) => ConnectUserAccountJob(
+    objectGenerator: (Map<String, dynamic> map) => ConnectUserAccountJob(
       map['\0App\\Queue\\Candidate\\ConnectUserAccountJob\0candidateUuid'],
       map['\0App\\Queue\\Candidate\\ConnectUserAccountJob\0userAccountUuid'],
     ),
-    (Object instance) => throw UnimplementedError(),
   ),
   PhpSerializationObjectInformation(
     r'Symfony\Component\Uid\UuidV4',
-    (Map<String, dynamic> map) => UuidV4(
+    objectGenerator: (Map<String, dynamic> map) => UuidV4(
       map['\0*\0uid'],
     ),
-    (Object instance) => throw UnimplementedError(),
   ),
 ];

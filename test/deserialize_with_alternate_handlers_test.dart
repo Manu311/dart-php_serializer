@@ -9,10 +9,10 @@ void main() {
         phpDeserialize(
             'O:19:"ClassWithParameters":4:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}s:11:"innerClass2";O:11:"DummyClass2":0:{}}',
             knownClasses: [
-              PhpSerializationObjectInformation<DummyClass>(
-                  'DummyClass',
-                  (Map<String, dynamic> map) => const DummyClass(),
-                  (Object instance) => <String, dynamic>{}),
+              PhpSerializationObjectInformation<DummyClass>('DummyClass',
+                  objectGenerator: (Map<String, dynamic> map) =>
+                      const DummyClass(),
+                  dataExtractor: (Object instance) => <String, dynamic>{}),
             ],
             fallbackObjectDeserialization:
                 const GenerateMapOnMissingDeserializationInformation()),

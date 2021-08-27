@@ -143,8 +143,18 @@ class _Serializer {
             .handleSerialization(inputClass.runtimeType));
     final className = matchingObject.serializedClassName;
     late final Map<String, dynamic> intermediateMap;
+
+    final dataExtractor = matchingObject.dataExtractor ??
+        _fallbackObjectSerialization
+            .handleSerialization(inputClass.runtimeType)
+            .dataExtractor;
+
+    if (dataExtractor == null) {
+      throw ObjectWithoutSerializationInformationFound(inputClass.runtimeType);
+    }
+
     try {
-      intermediateMap = matchingObject.dataExtractor(inputClass);
+      intermediateMap = dataExtractor(inputClass);
     } catch (e) {
       throw CustomSerializationFailed(matchingObject.typeOf, e);
     }

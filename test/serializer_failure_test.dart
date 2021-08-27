@@ -16,10 +16,9 @@ void main() {
     final thrownInnerException = Exception('Test me');
     expect(
         () => phpSerialize(const DummyClass(), knownClasses: [
-              PhpSerializationObjectInformation<DummyClass>(
-                  'DummyClass',
-                  (Map<String, dynamic> map) => const DummyClass(),
-                  (Object instance) => throw thrownInnerException)
+              PhpSerializationObjectInformation<DummyClass>('DummyClass',
+                  dataExtractor: (Object instance) =>
+                      throw thrownInnerException)
             ]),
         throwsA((exception) =>
             (exception is CustomSerializationFailed) &&

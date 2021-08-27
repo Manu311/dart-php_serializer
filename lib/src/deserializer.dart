@@ -147,8 +147,17 @@ class _Deserializer {
     final parameterArray = Map<String, dynamic>.from(
         _parseArray(repr, allowSimplifiacation: false));
     final objectInfo = repr.getObjectInformation(classIdentifier);
+    final objectGenerator = (objectInfo.objectGenerator ??
+        fallbackObjectDeserialization
+            .handleDeserialization(classIdentifier)
+            .objectGenerator);
+
+    if (objectGenerator == null) {
+      throw ObjectWithoutDeserializationInformationFound(classIdentifier);
+    }
+
     try {
-      return objectInfo.objectGenerator(parameterArray);
+      return objectGenerator(parameterArray);
     } catch (e) {
       throw CustomDeserializationFailed(objectInfo.typeOf, e);
     }

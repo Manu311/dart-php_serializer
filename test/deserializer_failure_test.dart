@@ -17,9 +17,10 @@ void main() {
     expect(
         () => phpDeserialize('O:10:"DummyClass":0:{}', knownClasses: [
               PhpSerializationObjectInformation<DummyClass>(
-                  'DummyClass',
-                  (Map<String, dynamic> map) => throw thrownInnerException,
-                  (Object instance) => <String, dynamic>{})
+                'DummyClass',
+                objectGenerator: (Map<String, dynamic> map) =>
+                    throw thrownInnerException,
+              )
             ]),
         throwsA((exception) =>
             (exception is CustomDeserializationFailed) &&

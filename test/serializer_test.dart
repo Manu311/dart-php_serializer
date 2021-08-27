@@ -31,17 +31,15 @@ void main() {
 
   test('Serialization of classes', () {
     final objectSerializationData = [
-      PhpSerializationObjectInformation<DummyClass>(
-          'DummyClass',
-          (Map<String, dynamic> map) => const DummyClass(),
-          (Object instance) => <String, dynamic>{}),
-      PhpSerializationObjectInformation<ClassWithParameters>(
-          'ParameterClass',
-          (Map<String, dynamic> map) => ClassWithParameters(
+      PhpSerializationObjectInformation<DummyClass>('DummyClass',
+          objectGenerator: (Map<String, dynamic> map) => const DummyClass(),
+          dataExtractor: (Object instance) => <String, dynamic>{}),
+      PhpSerializationObjectInformation<ClassWithParameters>('ParameterClass',
+          objectGenerator: (Map<String, dynamic> map) => ClassWithParameters(
               Parameter1: map['Parameter1'],
               innerClass: map['innerClass'],
               otherParameter: map['otherParameter']),
-          (Object instance) => {
+          dataExtractor: (Object instance) => {
                 'Parameter1': (instance as ClassWithParameters).Parameter1,
                 'innerClass': instance.innerClass,
                 'otherParameter': instance.otherParameter
@@ -77,8 +75,7 @@ void main() {
         phpSerialize(serializeMe, knownClasses: [
           PhpSerializationObjectInformation<bool Function()>(
               'ClosureReturningBool',
-              (Map<String, dynamic> map) => throw UnimplementedError(),
-              (Object object) => {})
+              dataExtractor: (Object object) => {})
         ]),
         'O:20:"ClosureReturningBool":0:{}');
   });

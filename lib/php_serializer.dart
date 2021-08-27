@@ -17,16 +17,16 @@ class PhpSerializationObjectInformation<T extends Object> {
 
   ///Function which receives a [Map] of all the serialized properties and
   ///generates the resulting object in Dart.
-  final T Function(Map<String, dynamic> map) objectGenerator;
+  final T Function(Map<String, dynamic> map)? objectGenerator;
 
   //Object could be replaced with T, but generics inside of lambda-functions
   //do not work (yet)
   ///Function which receives an instance of an object and generates a [Map]
   ///which contains all the properties of the Php-object.
-  final Map<String, dynamic> Function(Object instance) dataExtractor;
+  final Map<String, dynamic> Function(Object instance)? dataExtractor;
 
   Type get typeOf => T;
 
-  const PhpSerializationObjectInformation(
-      this.serializedClassName, this.objectGenerator, this.dataExtractor);
+  const PhpSerializationObjectInformation(this.serializedClassName,
+      {this.objectGenerator, this.dataExtractor});
 }

@@ -33,17 +33,15 @@ void main() {
 
   test('Deserialization of classes', () {
     final objectSerializationData = [
-      PhpSerializationObjectInformation<DummyClass>(
-          'DummyClass',
-          (Map<String, dynamic> map) => const DummyClass(),
-          (Object instance) => <String, dynamic>{}),
-      PhpSerializationObjectInformation<ClassWithParameters>(
-          'ParameterClass',
-          (Map<String, dynamic> map) => ClassWithParameters(
+      PhpSerializationObjectInformation<DummyClass>('DummyClass',
+          objectGenerator: (Map<String, dynamic> map) => const DummyClass(),
+          dataExtractor: (Object instance) => <String, dynamic>{}),
+      PhpSerializationObjectInformation<ClassWithParameters>('ParameterClass',
+          objectGenerator: (Map<String, dynamic> map) => ClassWithParameters(
               Parameter1: map['Parameter1'],
               innerClass: map['innerClass'],
               otherParameter: map['otherParameter']),
-          (Object instance) => {
+          dataExtractor: (Object instance) => {
                 'Parameter1': (instance as ClassWithParameters).Parameter1,
                 'innerClass': instance.innerClass,
                 'otherParameter': instance.otherParameter
