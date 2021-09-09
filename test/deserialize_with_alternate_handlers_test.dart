@@ -1,7 +1,7 @@
 import 'package:php_serializer/php_serializer.dart';
 import 'package:test/test.dart';
 
-import 'testClasses.dart';
+import 'test_classes.dart';
 
 void main() {
   test('Deserialize classes into Maps', () {

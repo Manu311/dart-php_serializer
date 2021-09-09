@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 import 'package:php_serializer/php_serializer.dart';
-import 'testClasses.dart';
+import 'test_classes.dart';
 
 void main() {
   test('Serialize strings', () {
@@ -38,11 +38,11 @@ void main() {
           dataExtractor: (Object instance) => <String, dynamic>{}),
       PhpSerializationObjectInformation<ClassWithParameters>('ParameterClass',
           objectGenerator: (Map<String, dynamic> map) => ClassWithParameters(
-              Parameter1: map['Parameter1'],
+              parameter1: map['Parameter1'],
               innerClass: map['innerClass'],
               otherParameter: map['otherParameter']),
           dataExtractor: (Object instance) => {
-                'Parameter1': (instance as ClassWithParameters).Parameter1,
+                'Parameter1': (instance as ClassWithParameters).parameter1,
                 'innerClass': instance.innerClass,
                 'otherParameter': instance.otherParameter
               })
@@ -56,7 +56,7 @@ void main() {
             'O:14:"ParameterClass":3:{s:10:"Parameter1";i:42;s:14:"otherParameter";s:5:"Value";s:10:"innerClass";O:10:"DummyClass":0:{}}',
             knownClasses: objectSerializationData),
         const ClassWithParameters(
-            Parameter1: 42, otherParameter: 'Value', innerClass: DummyClass()));
+            parameter1: 42, otherParameter: 'Value', innerClass: DummyClass()));
   });
   test('Deserialize null', () {
     expect(phpDeserialize('N;'), null);

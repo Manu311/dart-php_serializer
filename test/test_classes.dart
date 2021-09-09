@@ -3,10 +3,13 @@ class DummyClass {
 
   @override
   bool operator ==(Object other) => other is DummyClass;
+
+  @override
+  int get hashCode => 1;
 }
 
 class ClassWithParameters {
-  final int Parameter1;
+  final int parameter1;
   final String otherParameter;
   final DummyClass innerClass;
   // ignore: unused_field
@@ -15,11 +18,11 @@ class ClassWithParameters {
   static final int thisShouldNotBeSerialized = 55;
   static const int neitherShouldThisBeSerialized = 50;
 
-  int get parameterViaGetter => Parameter1;
+  int get parameterViaGetter => parameter1;
   set parameterViaSetter(int newValue) {}
 
   const ClassWithParameters(
-      {required this.Parameter1,
+      {required this.parameter1,
       required this.otherParameter,
       required this.innerClass})
       : _hiddenDuplicate = otherParameter;
@@ -27,7 +30,10 @@ class ClassWithParameters {
   @override
   bool operator ==(Object other) =>
       (other is ClassWithParameters) &&
-      (other.Parameter1 == Parameter1) &&
+      (other.parameter1 == parameter1) &&
       (other.otherParameter == otherParameter) &&
       (other.innerClass == innerClass);
+
+  @override
+  int get hashCode => parameter1 ^ otherParameter.length ^ innerClass.hashCode;
 }

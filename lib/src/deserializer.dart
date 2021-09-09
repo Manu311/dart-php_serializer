@@ -125,7 +125,7 @@ class _Deserializer {
 
     for (var i = 0; i != arrayLength; ++i) {
       final key = _parse(repr);
-      if (canBeSimplified && (!(key is int) || key != i)) {
+      if (canBeSimplified && (key is! int || key != i)) {
         canBeSimplified = false;
       }
       final value = _parse(repr);

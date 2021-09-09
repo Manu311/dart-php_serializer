@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 import 'package:php_serializer/php_serializer.dart';
-import 'testClasses.dart';
+import 'test_classes.dart';
 
 void main() {
   test('Fail to serialize unknown object', () {

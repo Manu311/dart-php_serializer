@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('Actual example from Symfony', () {
     const serialized =
-        'O:36:"Symfony\\Component\\Messenger\\Envelope":2:{s:44:"\0Symfony\\Component\\Messenger\\Envelope\0stamps";a:1:{s:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp";a:1:{i:0;O:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp":1:{s:55:"\0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp\0busName";s:21:"messenger.bus.default";}}}s:45:"\0Symfony\\Component\\Messenger\\Envelope\0message";O:42:"App\\Queue\\UserAccount\\CreateUserAccountJob":2:{s:56:"\0App\\Queue\\UserAccount\\CreateUserAccountJob\0emailAddress";s:28:"DislikeLeash@BoatComics.test";s:54:"\0App\\Queue\\UserAccount\\CreateUserAccountJob\0successJob";O:41:"App\\Queue\\Candidate\\ConnectUserAccountJob":2:{s:58:"\0App\\Queue\\Candidate\\ConnectUserAccountJob\0userAccountUuid";N;s:56:"\0App\\Queue\\Candidate\\ConnectUserAccountJob\0candidateUuid";O:28:"Symfony\\Component\\Uid\\UuidV4":1:{s:6:"\0*\0uid";s:36:"eecdf048-75d9-4f26-bb37-e6d168a41006";}}}}';
+        'O:36:"Symfony\\Component\\Messenger\\Envelope":2:{s:44:"0Symfony\\Component\\Messenger\\Envelope0stamps";a:1:{s:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp";a:1:{i:0;O:46:"Symfony\\Component\\Messenger\\Stamp\\BusNameStamp":1:{s:55:"0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp0busName";s:21:"messenger.bus.default";}}}s:45:"0Symfony\\Component\\Messenger\\Envelope0message";O:42:"App\\Queue\\UserAccount\\CreateUserAccountJob":2:{s:56:"0App\\Queue\\UserAccount\\CreateUserAccountJob0emailAddress";s:28:"DislikeLeash@BoatComics.test";s:54:"0App\\Queue\\UserAccount\\CreateUserAccountJob0successJob";O:41:"App\\Queue\\Candidate\\ConnectUserAccountJob":2:{s:58:"0App\\Queue\\Candidate\\ConnectUserAccountJob0userAccountUuid";N;s:56:"0App\\Queue\\Candidate\\ConnectUserAccountJob0candidateUuid";O:28:"Symfony\\Component\\Uid\\UuidV4":1:{s:6:"0*0uid";s:36:"eecdf048-75d9-4f26-bb37-e6d168a41006";}}}}';
     expect(
         () => phpDeserialize(serialized),
         throwsA(
@@ -65,38 +65,38 @@ final List<PhpSerializationObjectInformation> symfonyExampleInformation = [
     r'Symfony\Component\Messenger\Envelope',
     objectGenerator: (Map<String, dynamic> map) {
       final stamps = List<StampInterface>.from(
-          map['\0Symfony\\Component\\Messenger\\Envelope\0stamps']
+          map['0Symfony\\Component\\Messenger\\Envelope0stamps']
               ['Symfony\\Component\\Messenger\\Stamp\\BusNameStamp'],
           growable: false);
 
       return SymfonyEnvelope(
-          map['\0Symfony\\Component\\Messenger\\Envelope\0message'], stamps);
+          map['0Symfony\\Component\\Messenger\\Envelope0message'], stamps);
     },
   ),
   PhpSerializationObjectInformation(
     r'Symfony\Component\Messenger\Stamp\BusNameStamp',
     objectGenerator: (Map<String, dynamic> map) => SymfonyBusNameStamp(
-      map['\0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp\0busName'],
+      map['0Symfony\\Component\\Messenger\\Stamp\\BusNameStamp0busName'],
     ),
   ),
   PhpSerializationObjectInformation(
     r'App\Queue\UserAccount\CreateUserAccountJob',
     objectGenerator: (Map<String, dynamic> map) => CreateUserAccount(
-      map['\0App\\Queue\\UserAccount\\CreateUserAccountJob\0emailAddress'],
-      map['\0App\\Queue\\UserAccount\\CreateUserAccountJob\0successJob'],
+      map['0App\\Queue\\UserAccount\\CreateUserAccountJob0emailAddress'],
+      map['0App\\Queue\\UserAccount\\CreateUserAccountJob0successJob'],
     ),
   ),
   PhpSerializationObjectInformation(
     r'App\Queue\Candidate\ConnectUserAccountJob',
     objectGenerator: (Map<String, dynamic> map) => ConnectUserAccountJob(
-      map['\0App\\Queue\\Candidate\\ConnectUserAccountJob\0candidateUuid'],
-      map['\0App\\Queue\\Candidate\\ConnectUserAccountJob\0userAccountUuid'],
+      map['0App\\Queue\\Candidate\\ConnectUserAccountJob0candidateUuid'],
+      map['0App\\Queue\\Candidate\\ConnectUserAccountJob0userAccountUuid'],
     ),
   ),
   PhpSerializationObjectInformation(
     r'Symfony\Component\Uid\UuidV4',
     objectGenerator: (Map<String, dynamic> map) => UuidV4(
-      map['\0*\0uid'],
+      map['0*0uid'],
     ),
   ),
 ];

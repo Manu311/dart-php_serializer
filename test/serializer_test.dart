@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 import 'package:php_serializer/php_serializer.dart';
-import 'testClasses.dart';
+import 'test_classes.dart';
 
 void main() {
   test('Serialize strings', () {
@@ -36,11 +36,11 @@ void main() {
           dataExtractor: (Object instance) => <String, dynamic>{}),
       PhpSerializationObjectInformation<ClassWithParameters>('ParameterClass',
           objectGenerator: (Map<String, dynamic> map) => ClassWithParameters(
-              Parameter1: map['Parameter1'],
+              parameter1: map['Parameter1'],
               innerClass: map['innerClass'],
               otherParameter: map['otherParameter']),
           dataExtractor: (Object instance) => {
-                'Parameter1': (instance as ClassWithParameters).Parameter1,
+                'Parameter1': (instance as ClassWithParameters).parameter1,
                 'innerClass': instance.innerClass,
                 'otherParameter': instance.otherParameter
               })
@@ -51,7 +51,7 @@ void main() {
     expect(
         phpSerialize(
             const ClassWithParameters(
-                Parameter1: 42,
+                parameter1: 42,
                 otherParameter: 'Value',
                 innerClass: DummyClass()),
             knownClasses: objectSerializationData), (String serializedString) {
@@ -70,7 +70,7 @@ void main() {
   test('Serialize closure/function', () {
     //Php doesn't allow closures to be serialized, but since everything is an
     //object in Dart, serialization of Closures is not a problem.
-    final serializeMe = () => true;
+    serializeMe() => true;
     expect(
         phpSerialize(serializeMe, knownClasses: [
           PhpSerializationObjectInformation<bool Function()>(
