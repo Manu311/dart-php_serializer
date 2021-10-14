@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../php_serializer.dart';
 
 /// Takes an object and converts it into a [String] which could be deserialized
@@ -97,7 +99,7 @@ class _Serializer {
   }
 
   String _parseString(String inputString) {
-    return 's:${inputString.length}:"$inputString";';
+    return 's:${utf8.encode(inputString).length}:"$inputString";';
   }
 
   String _parseInt(int inputInt) {

@@ -1,5 +1,6 @@
 ## 1.0.0-pre.3
 
+* Fixed length-calculations for unicode-strings
 * Added const constructors to most classes
 * Changed interface of PhpSerializationObjectInformation to use optional named properties instead of required position dependant ones
 
