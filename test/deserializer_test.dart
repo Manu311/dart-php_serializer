@@ -65,4 +65,11 @@ void main() {
     expect(phpDeserialize('b:0;'), false);
     expect(phpDeserialize('b:1;'), true);
   });
+  test('Deserialize umlauts', () {
+    expect(phpDeserialize('s:6:"Hellö";'), 'Hellö');
+  });
+  test('Deserialize emojis', () {
+    expect(phpDeserialize('s:4:"' + String.fromCharCode(0x1f648) + '";'),
+        String.fromCharCode(0x1f648));
+  });
 }

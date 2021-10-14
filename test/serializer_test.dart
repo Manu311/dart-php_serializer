@@ -88,4 +88,11 @@ void main() {
     expect(phpSerialize(false), 'b:0;');
     expect(phpSerialize(true), 'b:1;');
   });
+  test('Serialize umlauts', () {
+    expect(phpSerialize('Hellö'), 's:6:"Hellö";');
+  });
+  test('Serialize emojis', () {
+    expect(phpSerialize(String.fromCharCode(0x1f648)),
+        's:4:"' + String.fromCharCode(0x1f648) + '";');
+  });
 }

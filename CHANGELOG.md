@@ -1,3 +1,7 @@
+## 0.3.2
+
+* Fixed length-calculations for unicode-strings
+
 ## 0.3.1
 
 * Removed UsePropertiesOnMissingSerializationInformation from basic-library-code which allows inclusion into flutter-projects once again.
