@@ -1,3 +1,7 @@
+## 1.0.0-pre.4
+
+* Improved performance when handling strings
+
 ## 1.0.0-pre.3
 
 * Fixed length-calculations for unicode-strings

@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import '../php_serializer.dart';
+import 'utf8_string_length_extension.dart';
 
 /// Parses a [String] which could be provided by Php via its function
 /// `serialize()` and returns the resulting object.
@@ -99,32 +98,32 @@ class _Deserializer {
       case 'b':
         return (repr.read(2) == '1;');
       default:
-        throw InvalidSerializedString(repr.readAll());
+        throw InvalidSerializedString(repr.readAll(100));
     }
   }
 
   String _parseString(_StringRepresentation repr) {
-    final lengthOfString = int.parse(repr.readUntil(delimiter: 58, skip: 2));
+    final lengthOfString = int.parse(repr.readUntil(delimiter: ':', skip: 2));
     final returnValue = repr.read(lengthOfString, skip: 2);
     return returnValue;
   }
 
   int _parseInt(_StringRepresentation repr) {
     final returnValue =
-        repr.readUntil(delimiter: 59, skip: 1); //delimiter = ';'
+        repr.readUntil(delimiter: ';', skip: 1); //delimiter = ';'
     return int.parse(returnValue);
   }
 
   double _parseDouble(_StringRepresentation repr) {
     final returnValue =
-        repr.readUntil(delimiter: 59, skip: 1); //delimiter = ';'
+        repr.readUntil(delimiter: ';', skip: 1); //delimiter = ';'
     return double.parse(returnValue);
   }
 
   dynamic _parseArray(_StringRepresentation repr,
       {bool allowSimplification = true}) {
     final arrayLength =
-        int.parse(repr.readUntil(delimiter: 58, skip: 2)); //delimiter = ':'
+        int.parse(repr.readUntil(delimiter: ':', skip: 2)); //delimiter = ':'
     final possibleReturnValue = <dynamic, dynamic>{};
     var canBeSimplified = allowSimplification;
 
@@ -148,7 +147,7 @@ class _Deserializer {
 
   dynamic _parseObject(_StringRepresentation repr) {
     final lengthOfName =
-        int.parse(repr.readUntil(delimiter: 58, skip: 2)); //delimiter = ':'
+        int.parse(repr.readUntil(delimiter: ':', skip: 2)); //delimiter = ':'
     final classIdentifier = repr.read(lengthOfName, skip: 2);
     final parameterArray = Map<String, dynamic>.from(
         _parseArray(repr, allowSimplification: false));
@@ -171,7 +170,7 @@ class _Deserializer {
 }
 
 class _StringRepresentation {
-  final List<int> _rawByteArray;
+  final String _rawString;
   int _offset = 0;
   final List<PhpSerializationObjectInformation> _knownClasses;
   final NoMatchingObjectDeserializationInformation
@@ -179,48 +178,34 @@ class _StringRepresentation {
 
   _StringRepresentation(
       String rawString, this._knownClasses, this.fallbackObjectDeserialization)
-      : _rawByteArray = utf8.encode(rawString);
+      : _rawString = rawString;
 
   void skip([int length = 1]) {
     _offset += length;
   }
 
   String read(int length, {int skip = 0}) {
-    assert(!isDone);
     if (length > remaining) length = remaining;
 
-    final returnValue = _rawByteArray.getRange(_offset, _offset + length);
+    var returnValue = _rawString.substring(_offset, _offset + length);
+    if (returnValue.utf8EncodedLength != returnValue.length) {
+      final difference = 2 * returnValue.length - returnValue.utf8EncodedLength;
 
-    _offset += length;
-    this.skip(skip);
-
-    return utf8.decode(returnValue.toList(growable: false));
-  }
-
-  //: = 58; 0x3a
-  //; = 59; 0x3b
-  String readUntil({int delimiter = 58, int skip = 0}) {
-    assert(!isDone);
-    final offset = _offset;
-    _offset = _rawByteArray.indexOf(delimiter, _offset);
-    if (_offset == -1) {
-      _offset = _rawByteArray.length;
+      returnValue = returnValue.substring(0, difference);
+      length -= (returnValue.utf8EncodedLength - returnValue.length);
     }
-
-    final returnValue = utf8.decode(
-        _rawByteArray.getRange(offset, _offset).toList(growable: false));
-
-    this.skip(skip);
+    _offset += length + skip;
     return returnValue;
   }
 
-  String readAll() => utf8.decode(_rawByteArray
-      .getRange(_offset, _rawByteArray.length)
-      .toList(growable: false));
+  String readUntil({String delimiter = ':', int skip = 0}) {
+    return read(_rawString.indexOf(delimiter, _offset) - _offset, skip: skip);
+  }
 
-  bool get isDone => _offset == _rawByteArray.length;
+  String readAll([int? maxLength]) => _rawString.substring(
+      _offset, maxLength != null ? _offset + maxLength : null);
 
-  int get remaining => _rawByteArray.length - _offset;
+  int get remaining => _rawString.length - _offset;
 
   PhpSerializationObjectInformation getObjectInformation(String identifier) {
     return _knownClasses.firstWhere(

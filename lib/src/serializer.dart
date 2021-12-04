@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import '../php_serializer.dart';
+import 'utf8_string_length_extension.dart';
 
 /// Takes an object and converts it into a [String] which could be deserialized
 /// by Php via its function `unserialize()`.
@@ -99,7 +98,7 @@ class _Serializer {
   }
 
   String _parseString(String inputString) {
-    return 's:${utf8.encode(inputString).length}:"$inputString";';
+    return 's:${inputString.utf8EncodedLength}:"$inputString";';
   }
 
   String _parseInt(int inputInt) {
