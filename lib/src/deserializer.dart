@@ -79,33 +79,33 @@ class _Deserializer {
     return _parse(repr);
   }
 
-  static const SMALL_S = 115; //s
-  static const SMALL_I = 105; //i
-  static const SMALL_D = 100; //d
-  static const SMALL_A = 97; //a
-  static const BIG_O = 79; //O
-  static const BIG_N = 78; //N
-  static const SMALL_B = 98; //b
-  static const DIGIT_ONE = 49; //1
-  static const CHAR_COLON = 58; //:
-  static const CHAR_SEMICOLON = 59; //:
+  static const smallS = 115; //s
+  static const smallI = 105; //i
+  static const smallD = 100; //d
+  static const smallA = 97; //a
+  static const bigO = 79; //O
+  static const bigN = 78; //N
+  static const smallB = 98; //b
+  static const digitOne = 49; //1
+  static const charColon = 58; //:
+  static const charSemicolon = 59; //:
 
   dynamic _parse(_StringRepresentation repr) {
     switch (repr.readSingleCodeUnitAndSkipOne()) {
-      case SMALL_S:
+      case smallS:
         return _parseString(repr);
-      case SMALL_I:
+      case smallI:
         return _parseInt(repr);
-      case SMALL_D:
+      case smallD:
         return _parseDouble(repr);
-      case SMALL_A:
+      case smallA:
         return _parseArray(repr);
-      case BIG_O:
+      case bigO:
         return _parseObject(repr);
-      case BIG_N:
+      case bigN:
         return null;
-      case SMALL_B:
-        return (repr.readSingleCodeUnitAndSkipOne() == DIGIT_ONE);
+      case smallB:
+        return (repr.readSingleCodeUnitAndSkipOne() == digitOne);
       default:
         throw InvalidSerializedString(repr.readAll(100));
     }
@@ -113,25 +113,25 @@ class _Deserializer {
 
   String _parseString(_StringRepresentation repr) {
     final lengthOfString =
-        int.parse(repr.readUntil(delimiter: CHAR_COLON, skip: 2));
+        int.parse(repr.readUntil(delimiter: charColon, skip: 2));
     final returnValue = repr.read(lengthOfString, skip: 2);
     return returnValue;
   }
 
   int _parseInt(_StringRepresentation repr) {
-    final returnValue = repr.readUntil(delimiter: CHAR_SEMICOLON, skip: 1);
+    final returnValue = repr.readUntil(delimiter: charSemicolon, skip: 1);
     return int.parse(returnValue);
   }
 
   double _parseDouble(_StringRepresentation repr) {
-    final returnValue = repr.readUntil(delimiter: CHAR_SEMICOLON, skip: 1);
+    final returnValue = repr.readUntil(delimiter: charSemicolon, skip: 1);
     return double.parse(returnValue);
   }
 
   dynamic _parseArray(_StringRepresentation repr,
       {bool allowSimplification = true}) {
     final arrayLength =
-        int.parse(repr.readUntil(delimiter: CHAR_COLON, skip: 2));
+        int.parse(repr.readUntil(delimiter: charColon, skip: 2));
     final possibleReturnValue = <dynamic, dynamic>{};
     var canBeSimplified = allowSimplification;
 
@@ -154,8 +154,8 @@ class _Deserializer {
   }
 
   dynamic _parseObject(_StringRepresentation repr) {
-    final lengthOfName = int.parse(
-        repr.readUntil(delimiter: CHAR_COLON, skip: 2)); //delimiter = ':'
+    final lengthOfName =
+        int.parse(repr.readUntil(delimiter: charColon, skip: 2));
     final classIdentifier = repr.read(lengthOfName, skip: 2);
     final parameterArray = Map<String, dynamic>.from(
         _parseArray(repr, allowSimplification: false));
