@@ -87,6 +87,8 @@ class _Deserializer {
   static const BIG_N = 78; //N
   static const SMALL_B = 98; //b
   static const DIGIT_ONE = 49; //1
+  static const CHAR_COLON = 58; //:
+  static const CHAR_SEMICOLON = 59; //:
 
   dynamic _parse(_StringRepresentation repr) {
     switch (repr.readSingleCodeUnitAndSkipOne()) {
@@ -110,27 +112,26 @@ class _Deserializer {
   }
 
   String _parseString(_StringRepresentation repr) {
-    final lengthOfString = int.parse(repr.readUntil(delimiter: ':', skip: 2));
+    final lengthOfString =
+        int.parse(repr.readUntil(delimiter: CHAR_COLON, skip: 2));
     final returnValue = repr.read(lengthOfString, skip: 2);
     return returnValue;
   }
 
   int _parseInt(_StringRepresentation repr) {
-    final returnValue =
-        repr.readUntil(delimiter: ';', skip: 1); //delimiter = ';'
+    final returnValue = repr.readUntil(delimiter: CHAR_SEMICOLON, skip: 1);
     return int.parse(returnValue);
   }
 
   double _parseDouble(_StringRepresentation repr) {
-    final returnValue =
-        repr.readUntil(delimiter: ';', skip: 1); //delimiter = ';'
+    final returnValue = repr.readUntil(delimiter: CHAR_SEMICOLON, skip: 1);
     return double.parse(returnValue);
   }
 
   dynamic _parseArray(_StringRepresentation repr,
       {bool allowSimplification = true}) {
     final arrayLength =
-        int.parse(repr.readUntil(delimiter: ':', skip: 2)); //delimiter = ':'
+        int.parse(repr.readUntil(delimiter: CHAR_COLON, skip: 2));
     final possibleReturnValue = <dynamic, dynamic>{};
     var canBeSimplified = allowSimplification;
 
@@ -142,7 +143,7 @@ class _Deserializer {
       final value = _parse(repr);
       possibleReturnValue[key] = value;
     }
-    repr.skip(); //}
+    repr.skip();
 
     if (canBeSimplified) {
       return List<dynamic>.generate(
@@ -153,8 +154,8 @@ class _Deserializer {
   }
 
   dynamic _parseObject(_StringRepresentation repr) {
-    final lengthOfName =
-        int.parse(repr.readUntil(delimiter: ':', skip: 2)); //delimiter = ':'
+    final lengthOfName = int.parse(
+        repr.readUntil(delimiter: CHAR_COLON, skip: 2)); //delimiter = ':'
     final classIdentifier = repr.read(lengthOfName, skip: 2);
     final parameterArray = Map<String, dynamic>.from(
         _parseArray(repr, allowSimplification: false));
@@ -210,8 +211,13 @@ class _StringRepresentation {
     return returnValue;
   }
 
-  String readUntil({String delimiter = ':', int skip = 0}) {
-    return read(_rawString.indexOf(delimiter, _offset) - _offset, skip: skip);
+  String readUntil({required int delimiter, int skip = 0}) {
+    int i;
+    for (i = _offset;
+        _rawString.codeUnitAt(i) != delimiter || i >= _rawString.length;
+        ++i) {}
+
+    return read(i - _offset, skip: skip);
   }
 
   String readAll([int? maxLength]) => _rawString.substring(
