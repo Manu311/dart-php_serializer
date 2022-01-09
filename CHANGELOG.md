@@ -1,3 +1,8 @@
+## 1.0.0
+
+* Improved performance
+* Added advanced example
+
 ## 1.0.0-pre.4
 
 * Improved performance when handling strings
