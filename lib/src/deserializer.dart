@@ -79,24 +79,31 @@ class _Deserializer {
     return _parse(repr);
   }
 
-  dynamic _parse(_StringRepresentation repr) {
-    final identifier = repr.read(1, skip: 1);
+  static const SMALL_S = 115; //s
+  static const SMALL_I = 105; //i
+  static const SMALL_D = 100; //d
+  static const SMALL_A = 97; //a
+  static const BIG_O = 79; //O
+  static const BIG_N = 78; //N
+  static const SMALL_B = 98; //b
+  static const DIGIT_ONE = 49; //1
 
-    switch (identifier) {
-      case 's':
+  dynamic _parse(_StringRepresentation repr) {
+    switch (repr.readSingleCodeUnitAndSkipOne()) {
+      case SMALL_S:
         return _parseString(repr);
-      case 'i':
+      case SMALL_I:
         return _parseInt(repr);
-      case 'd':
+      case SMALL_D:
         return _parseDouble(repr);
-      case 'a':
+      case SMALL_A:
         return _parseArray(repr);
-      case 'O':
+      case BIG_O:
         return _parseObject(repr);
-      case 'N':
+      case BIG_N:
         return null;
-      case 'b':
-        return (repr.read(2) == '1;');
+      case SMALL_B:
+        return (repr.readSingleCodeUnitAndSkipOne() == DIGIT_ONE);
       default:
         throw InvalidSerializedString(repr.readAll(100));
     }
@@ -182,6 +189,11 @@ class _StringRepresentation {
 
   void skip([int length = 1]) {
     _offset += length;
+  }
+
+  int readSingleCodeUnitAndSkipOne() {
+    _offset += 2;
+    return _rawString.codeUnitAt(_offset - 2);
   }
 
   String read(int length, {int skip = 0}) {
