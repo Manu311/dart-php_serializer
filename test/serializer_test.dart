@@ -93,4 +93,8 @@ void main() {
     expect(phpSerialize(String.fromCharCode(0x1f648)),
         's:4:"' + String.fromCharCode(0x1f648) + '";');
   });
+  test('Serialize special characters', () {
+    expect(phpSerialize({'acre': '50’x70’x80’ how are you'}),
+        'a:1:{s:4:"acre";s:29:"50’x70’x80’ how are you";}');
+  });
 }

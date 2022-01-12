@@ -72,4 +72,8 @@ void main() {
     expect(phpDeserialize('s:4:"' + String.fromCharCode(0x1f648) + '";'),
         String.fromCharCode(0x1f648));
   });
+  test('Deserialize special characters', () {
+    expect(phpDeserialize('a:1:{s:4:"acre";s:29:"50’x70’x80’ how are you";}'),
+        {'acre': '50’x70’x80’ how are you'});
+  });
 }

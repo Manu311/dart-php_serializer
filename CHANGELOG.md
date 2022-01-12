@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Bugfix (#2): Some character-sequences didn't get deserialized correctly
+
 ## 1.0.0
 
 * Improved performance
