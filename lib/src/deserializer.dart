@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../php_serializer.dart';
 import 'utf8_string_length_extension.dart';
 
@@ -178,15 +180,16 @@ class _Deserializer {
 }
 
 class _StringRepresentation {
-  final String _rawString;
+  final List<int> _utf8Chars;
   int _offset = 0;
+
   final List<PhpSerializationObjectInformation> _knownClasses;
   final NoMatchingObjectDeserializationInformation
       fallbackObjectDeserialization;
 
   _StringRepresentation(
       String rawString, this._knownClasses, this.fallbackObjectDeserialization)
-      : _rawString = rawString;
+      : _utf8Chars = utf8.encode(rawString);
 
   void skip([int length = 1]) {
     _offset += length;
@@ -194,19 +197,14 @@ class _StringRepresentation {
 
   int readSingleCodeUnitAndSkipOne() {
     _offset += 2;
-    return _rawString.codeUnitAt(_offset - 2);
+    return _utf8Chars.elementAt(_offset - 2);
   }
 
   String read(int length, {int skip = 0}) {
     if (length > remaining) length = remaining;
 
-    var returnValue = _rawString.substring(_offset, _offset + length);
-    if (returnValue.utf8EncodedLength != returnValue.length) {
-      final difference = 2 * returnValue.length - returnValue.utf8EncodedLength;
-
-      returnValue = returnValue.substring(0, difference);
-      length -= (returnValue.utf8EncodedLength - returnValue.length);
-    }
+    var returnValue =
+        utf8.decode(_utf8Chars.sublist(_offset, _offset + length));
     _offset += length + skip;
     return returnValue;
   }
@@ -214,16 +212,16 @@ class _StringRepresentation {
   String readUntil({required int delimiter, int skip = 0}) {
     int i;
     for (i = _offset;
-        _rawString.codeUnitAt(i) != delimiter || i >= _rawString.length;
+        _utf8Chars[i] != delimiter || i >= _utf8Chars.length;
         ++i) {}
 
     return read(i - _offset, skip: skip);
   }
 
-  String readAll([int? maxLength]) => _rawString.substring(
-      _offset, maxLength != null ? _offset + maxLength : null);
+  String readAll([int? maxLength]) => utf8.decode(_utf8Chars.sublist(
+      _offset, maxLength != null ? _offset + maxLength : null));
 
-  int get remaining => _rawString.length - _offset;
+  int get remaining => _utf8Chars.length - _offset;
 
   PhpSerializationObjectInformation getObjectInformation(String identifier) {
     return _knownClasses.firstWhere(
