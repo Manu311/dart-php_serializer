@@ -82,7 +82,7 @@ void main() {
   test('Serialize null', () {
     expect(phpSerialize(null), 'N;');
   });
-  test('Serialize bools', () {
+  test('Serialize booleans', () {
     expect(phpSerialize(false), 'b:0;');
     expect(phpSerialize(true), 'b:1;');
   });
@@ -91,7 +91,7 @@ void main() {
   });
   test('Serialize emojis', () {
     expect(phpSerialize(String.fromCharCode(0x1f648)),
-        's:4:"' + String.fromCharCode(0x1f648) + '";');
+        's:4:"${String.fromCharCode(0x1f648)}";');
   });
   test('Serialize special characters', () {
     expect(phpSerialize({'acre': '50’x70’x80’ how are you'}),

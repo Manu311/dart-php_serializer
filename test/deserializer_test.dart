@@ -69,7 +69,7 @@ void main() {
     expect(phpDeserialize('s:6:"Hellö";'), 'Hellö');
   });
   test('Deserialize emojis', () {
-    expect(phpDeserialize('s:4:"' + String.fromCharCode(0x1f648) + '";'),
+    expect(phpDeserialize('s:4:"${String.fromCharCode(0x1f648)}";'),
         String.fromCharCode(0x1f648));
   });
   test('Deserialize special characters', () {

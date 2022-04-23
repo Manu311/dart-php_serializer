@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import '../php_serializer.dart';
-import 'utf8_string_length_extension.dart';
 
 /// Parses a [String] which could be provided by Php via its function
 /// `serialize()` and returns the resulting object.
