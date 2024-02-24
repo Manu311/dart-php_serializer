@@ -76,4 +76,11 @@ void main() {
     expect(phpDeserialize('a:1:{s:4:"acre";s:29:"50’x70’x80’ how are you";}'),
         {'acre': '50’x70’x80’ how are you'});
   });
+  test('Deserialize scientific notation', () {
+    expect(phpDeserialize('d:-42e200;'), -42e200);
+    expect(phpDeserialize('d:42E-20;'), 42e-20);
+  });
+  test('Deserialize NaN', () {
+    expect(phpDeserialize('d:NAN;'), isNaN);
+  });
 }

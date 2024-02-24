@@ -1,5 +1,4 @@
 import 'package:php_serializer/php_serializer.dart';
-import '../../php_serializer.dart';
 
 /// Throws an exception of type [DeserializationException] if there is no
 /// matching [PhpSerializationObjectInformation] for a class.

@@ -106,6 +106,9 @@ class _Serializer {
   }
 
   String _parseDouble(double inputDouble) {
+    if (inputDouble.isNaN) {
+      return 'd:NAN;';
+    }
     if (inputDouble.floorToDouble() == inputDouble) {
       return 'd:${inputDouble.floor()};';
     }

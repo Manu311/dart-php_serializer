@@ -126,6 +126,9 @@ class _Deserializer {
 
   double _parseDouble(_StringRepresentation repr) {
     final returnValue = repr.readUntil(delimiter: charSemicolon, skip: 1);
+    if (returnValue == 'NAN') {
+      return double.nan;
+    }
     return double.parse(returnValue);
   }
 

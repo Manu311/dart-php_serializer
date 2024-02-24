@@ -97,4 +97,7 @@ void main() {
     expect(phpSerialize({'acre': '50’x70’x80’ how are you'}),
         'a:1:{s:4:"acre";s:29:"50’x70’x80’ how are you";}');
   });
+  test('Serialize nan', () {
+    expect(phpSerialize(double.nan), 'd:NAN;');
+  });
 }

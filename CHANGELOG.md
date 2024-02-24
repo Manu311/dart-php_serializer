@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Added parsing of NaN to both directions
+* Added parsing of scientific notation in php-strings
+
 ## 1.1.0
 
 * Bugfix (#2): Some character-sequences didn't get deserialized correctly
